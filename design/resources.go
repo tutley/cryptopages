@@ -16,7 +16,7 @@ var _ = Resource("user", func() {
 		Routing(GET("/:username"))
 		Params(func() {
 			Param("username", String, "username", func() {
-				Minimum(1)
+				MinLength(1)
 			})
 		})
 		Response(OK)

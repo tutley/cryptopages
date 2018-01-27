@@ -23,7 +23,7 @@ var _ = API("cryptopages", func() {
 	})
 	Consumes("application/json")
 	Produces("application/json")
-	Security("JWT")
+	Security("jwt")
 	ResponseTemplate(Created, func(pattern string) {
 		Description("Resource created")
 		Status(201)

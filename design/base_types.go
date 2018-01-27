@@ -56,7 +56,7 @@ var UserPayload = Type("UserPayload", func() {
 	Attribute("jobCategory", func() {
 		Enum("hardware", "software", "writing", "legal", "labor", "automotive", "services", "others")
 	})
-	Attribute("skills", CollectionOf(String))
+	Attribute("skills", ArrayOf(String))
 	Attribute("jobDescription", String, func() {
 		Example("I'm looking for small remote projects")
 	})

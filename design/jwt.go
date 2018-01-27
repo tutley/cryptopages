@@ -21,11 +21,6 @@ var _ = Resource("jwt", func() {
 	Description("This resource uses JWT to secure its endpoints")
 	DefaultMedia(Success)
 
-	// Use JWT to enforce auth on requests to this endpoint
-	Security(JWT, func() {
-		Scope("api:access") // Enforce presence of "api" scope in JWT claims.
-	})
-
 	Action("signin", func() {
 		Description("Creates a valid JWT")
 		Security(SigninBasicAuth)
