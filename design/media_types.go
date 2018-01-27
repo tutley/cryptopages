@@ -23,6 +23,7 @@ var User = MediaType("application/vnd.cryptopages.user", func() {
 		Attribute("jobCategory")
 		Attribute("skills")
 		Attribute("jobDescription")
+		Attribute("available")
 		Required("username", "href", "name", "jobCategory")
 	})
 	View("default", func() {
@@ -36,10 +37,12 @@ var User = MediaType("application/vnd.cryptopages.user", func() {
 		Attribute("jobCategory")
 		Attribute("skills")
 		Attribute("jobDescription")
+		Attribute("available")
 	})
 	View("tiny", func() {
 		Attribute("username")
 		Attribute("href")
+		Attribute("name")
 		Attribute("jobCategory")
 	})
 })

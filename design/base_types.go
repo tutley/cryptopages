@@ -17,7 +17,7 @@ var UserPayload = Type("UserPayload", func() {
 		// TODO: add regex to disallow spaces
 		Example("scubasteve")
 	})
-	Attribute("password", String, "A password", func() {
+	Attribute("password", String, "A password (only exposed to user)", func() {
 		MinLength(8)
 		Example("somethingreallyhardtoguess123%$!@#")
 	})
@@ -30,6 +30,7 @@ var UserPayload = Type("UserPayload", func() {
 		})
 		Attribute("makePublic", Boolean, "Should the email address be shown to others")
 	})
+	Attribute("available", Boolean, "Is this user available to provide work")
 	Attribute("location", func() {
 		Description("the user's location geographically")
 		Attribute("value", String, "the location", func() {
