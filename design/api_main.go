@@ -15,6 +15,7 @@ var _ = API("cryptopages", func() {
 		Email("tom@tomutley.com")
 		URL("https://tomutley.com")
 	})
+	BasePath("/")
 	Origin("*", func() {
 		Methods("GET", "POST", "PUT", "PATCH", "DELETE")
 		MaxAge(600)

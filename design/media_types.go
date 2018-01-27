@@ -46,3 +46,15 @@ var User = MediaType("application/vnd.cryptopages.user", func() {
 		Attribute("jobCategory")
 	})
 })
+
+var Success = MediaType("application/vnd.cryptopages.success", func() {
+	Description("The common media type to auth responses")
+	TypeName("Success")
+	Attributes(func() {
+		Attribute("ok", Boolean, "Always true")
+		Required("ok")
+	})
+	View("default", func() {
+		Attribute("ok")
+	})
+})

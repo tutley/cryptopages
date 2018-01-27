@@ -8,7 +8,9 @@ import (
 var _ = Resource("user", func() {
 	BasePath("/user")
 	DefaultMedia(User)
-
+	Security(JWT, func() { // Use JWT to auth requests to this endpoint
+		Scope("api:access") // Enforce presence of "api" scope in JWT claims.
+	})
 	Action("show", func() {
 		Description("Get user by username")
 		Routing(GET("/:username"))
@@ -45,6 +47,7 @@ var _ = Resource("user", func() {
 			POST(""),
 		)
 		Description("Register new user")
+		NoSecurity()
 		Payload(UserPayload, func() {
 			Required("name", "username", "password")
 		})
