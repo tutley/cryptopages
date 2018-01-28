@@ -5,6 +5,7 @@ package main
 import (
 	"context"
 	"crypto/rsa"
+	"log"
 	"net/http"
 
 	jwtgo "github.com/dgrijalva/jwt-go"
@@ -12,6 +13,7 @@ import (
 	"github.com/goadesign/goa/middleware"
 	"github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/tutley/cryptopages/app"
+	"gopkg.in/mgo.v2"
 )
 
 // PrivateKey  will be used by the JWT signin handler to create a token
@@ -27,7 +29,14 @@ func main() {
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
 
-	// Setup DB
+	// Init the Database
+	session, err := mgo.Dial("mongodb://localhost")
+	if err != nil {
+		log.Fatal("DB Connect error: ", err)
+	}
+	defer session.Close()
+	db := session.DB("cryptopages")
+	service.Use(MongoMiddleware(db))
 
 	// Setup JWT Keys and middleware
 	validationHandler, _ := goa.NewMiddleware(func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
