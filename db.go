@@ -23,3 +23,9 @@ func MongoMiddleware(db *mgo.Database) goa.Middleware {
 		}
 	}
 }
+
+// GetDB grabs the db pointer off the context
+func GetDB(ctx context.Context) *mgo.Database {
+	db := ctx.Value(DBKey).(*mgo.Database)
+	return db
+}
