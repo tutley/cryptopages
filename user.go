@@ -22,6 +22,7 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 	// Put your logic here
 
 	return nil
+
 	// UserController_Create: end_implement
 }
 
@@ -32,6 +33,7 @@ func (c *UserController) Delete(ctx *app.DeleteUserContext) error {
 	// Put your logic here
 
 	return nil
+
 	// UserController_Delete: end_implement
 }
 
@@ -43,6 +45,7 @@ func (c *UserController) Search(ctx *app.SearchUserContext) error {
 
 	res := app.CryptopagesUserCollection{}
 	return ctx.OK(res)
+
 	// UserController_Search: end_implement
 }
 
@@ -54,6 +57,7 @@ func (c *UserController) Show(ctx *app.ShowUserContext) error {
 
 	res := &app.CryptopagesUser{}
 	return ctx.OK(res)
+
 	// UserController_Show: end_implement
 }
 
@@ -64,5 +68,6 @@ func (c *UserController) Update(ctx *app.UpdateUserContext) error {
 	// Put your logic here
 
 	return nil
+
 	// UserController_Update: end_implement
 }

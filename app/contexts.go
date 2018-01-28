@@ -6,6 +6,7 @@
 // $ goagen
 // --design=github.com/tutley/cryptopages/design
 // --out=$(GOPATH)/src/github.com/tutley/cryptopages
+// --regen=true
 // --version=v1.3.1
 
 package app
@@ -14,7 +15,6 @@ import (
 	"context"
 	"github.com/goadesign/goa"
 	"net/http"
-	"strconv"
 	"unicode/utf8"
 )
 
@@ -433,7 +433,7 @@ type DeleteUserContext struct {
 	context.Context
 	*goa.ResponseData
 	*goa.RequestData
-	Username int
+	Username string
 }
 
 // NewDeleteUserContext parses the incoming request URL and body, performs validations and creates the
@@ -448,13 +448,9 @@ func NewDeleteUserContext(ctx context.Context, r *http.Request, service *goa.Ser
 	paramUsername := req.Params["username"]
 	if len(paramUsername) > 0 {
 		rawUsername := paramUsername[0]
-		if username, err2 := strconv.Atoi(rawUsername); err2 == nil {
-			rctx.Username = username
-		} else {
-			err = goa.MergeErrors(err, goa.InvalidParamTypeError("username", rawUsername, "integer"))
-		}
-		if len(rctx.Username) < 2 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`username`, rctx.Username, len(rctx.Username), 2, true))
+		rctx.Username = rawUsername
+		if utf8.RuneCountInString(rctx.Username) < 2 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`username`, rctx.Username, utf8.RuneCountInString(rctx.Username), 2, true))
 		}
 	}
 	return &rctx, err

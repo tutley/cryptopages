@@ -6,6 +6,7 @@
 // $ goagen
 // --design=github.com/tutley/cryptopages/design
 // --out=$(GOPATH)/src/github.com/tutley/cryptopages
+// --regen=true
 // --version=v1.3.1
 
 package test
@@ -253,7 +254,7 @@ func CreateUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 // It returns the response writer so it's possible to inspect the response headers and the media type struct written to the response.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteUserBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UserController, username int) (http.ResponseWriter, error) {
+func DeleteUserBadRequest(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UserController, username string) (http.ResponseWriter, error) {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -322,7 +323,7 @@ func DeleteUserBadRequest(t goatest.TInterface, ctx context.Context, service *go
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteUserNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UserController, username int) http.ResponseWriter {
+func DeleteUserNoContent(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UserController, username string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer
@@ -384,7 +385,7 @@ func DeleteUserNoContent(t goatest.TInterface, ctx context.Context, service *goa
 // It returns the response writer so it's possible to inspect the response headers.
 // If ctx is nil then context.Background() is used.
 // If service is nil then a default service is created.
-func DeleteUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UserController, username int) http.ResponseWriter {
+func DeleteUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.Service, ctrl app.UserController, username string) http.ResponseWriter {
 	// Setup service
 	var (
 		logBuf bytes.Buffer

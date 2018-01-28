@@ -6,6 +6,7 @@
 // $ goagen
 // --design=github.com/tutley/cryptopages/design
 // --out=$(GOPATH)/src/github.com/tutley/cryptopages
+// --regen=true
 // --version=v1.3.1
 
 package test

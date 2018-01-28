@@ -20,7 +20,11 @@ func (c *HealthController) Health(ctx *app.HealthHealthContext) error {
 	// HealthController_Health: start_implement
 
 	// Put your logic here
-
+	// if _, ok := b.db.GetAccount(1); !ok {
+	// 	return fmt.Errorf("failed to connect to DB")
+	// }
+	// return c.OK([]byte("ok"))
 	return nil
+
 	// HealthController_Health: end_implement
 }

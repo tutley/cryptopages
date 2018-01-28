@@ -74,7 +74,7 @@ var _ = Resource("user", func() {
 			DELETE("/:username"),
 		)
 		Params(func() {
-			Param("username", Integer, "username")
+			Param("username", String, "username")
 		})
 		Response(NoContent)
 		Response(NotFound)

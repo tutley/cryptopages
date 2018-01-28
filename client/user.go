@@ -6,6 +6,7 @@
 // $ goagen
 // --design=github.com/tutley/cryptopages/design
 // --out=$(GOPATH)/src/github.com/tutley/cryptopages
+// --regen=true
 // --version=v1.3.1
 
 package client
@@ -16,7 +17,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strconv"
 )
 
 // CreateUserPayload is the user create action payload.
@@ -107,8 +107,8 @@ func (c *Client) NewCreateUserRequest(ctx context.Context, path string, payload 
 }
 
 // DeleteUserPath computes a request path to the delete action of user.
-func DeleteUserPath(username int) string {
-	param0 := strconv.Itoa(username)
+func DeleteUserPath(username string) string {
+	param0 := username
 
 	return fmt.Sprintf("/user/%s", param0)
 }

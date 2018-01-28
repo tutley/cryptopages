@@ -6,6 +6,7 @@
 // $ goagen
 // --design=github.com/tutley/cryptopages/design
 // --out=$(GOPATH)/src/github.com/tutley/cryptopages
+// --regen=true
 // --version=v1.3.1
 
 package cli
@@ -49,7 +50,7 @@ type (
 	// DeleteUserCommand is the command line data structure for the delete action of user
 	DeleteUserCommand struct {
 		// username
-		Username    int
+		Username    string
 		PrettyPrint bool
 	}
 
@@ -565,7 +566,7 @@ func (cmd *DeleteUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/user/%v", cmd.Username)
+		path = fmt.Sprintf("/user/%v", url.QueryEscape(cmd.Username))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -581,8 +582,8 @@ func (cmd *DeleteUserCommand) Run(c *client.Client, args []string) error {
 
 // RegisterFlags registers the command flags with the command line.
 func (cmd *DeleteUserCommand) RegisterFlags(cc *cobra.Command, c *client.Client) {
-	var username int
-	cc.Flags().IntVar(&cmd.Username, "username", username, `username`)
+	var username string
+	cc.Flags().StringVar(&cmd.Username, "username", username, `username`)
 }
 
 // Run makes the HTTP request corresponding to the SearchUserCommand command.

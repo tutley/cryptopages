@@ -3,10 +3,19 @@
 package main
 
 import (
+	"context"
+	"crypto/rsa"
+	"net/http"
+
+	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware"
+	"github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/tutley/cryptopages/app"
 )
+
+// PrivateKey  will be used by the JWT signin handler to create a token
+var PrivateKey *rsa.PrivateKey
 
 func main() {
 	// Create service
@@ -17,6 +26,32 @@ func main() {
 	service.Use(middleware.LogRequest(true))
 	service.Use(middleware.ErrorHandler(service, true))
 	service.Use(middleware.Recover())
+
+	// Setup DB
+
+	// Setup JWT Keys and middleware
+	validationHandler, _ := goa.NewMiddleware(func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+		token := jwt.ContextJWT(ctx)
+		claims, ok := token.Claims.(jwtgo.MapClaims)
+		if !ok {
+			return jwt.ErrJWTError("unsupported claims shape")
+		}
+		if val, ok := claims["scopes"].(string); !ok || val != "api:access" {
+			return jwt.ErrJWTError("you do not have api access")
+		}
+		return nil
+	})
+
+	keys, err := LoadJWTPublicKeys()
+	if err != nil {
+		service.LogError("pubKey", "err", err)
+	}
+	jwtResolver := jwt.NewSimpleResolver(keys)
+	PrivateKey, err = LoadJWTPrivateKey()
+	if err != nil {
+		service.LogError("privKey", "err", err)
+	}
+	app.UseJWTMiddleware(service, jwt.New(jwtResolver, validationHandler, app.NewJWTSecurity()))
 
 	// Mount "health" controller
 	c := NewHealthController(service)

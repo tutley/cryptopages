@@ -774,7 +774,7 @@ paths:
         minLength: 2
         name: username
         required: true
-        type: integer
+        type: string
       produces:
       - application/vnd.goa.error
       responses:
