@@ -6,7 +6,7 @@ import (
 )
 
 var _ = Resource("health", func() {
-
+	NoSecurity()
 	BasePath("/_ah")
 
 	Action("health", func() {

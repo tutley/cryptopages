@@ -14,6 +14,7 @@ import (
 	"github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/tutley/cryptopages/app"
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // PrivateKey  will be used by the JWT signin handler to create a token
@@ -86,4 +87,34 @@ func main() {
 		service.LogError("startup", "err", err)
 	}
 
+}
+
+// NewBasicAuthMiddleware creates a middleware that checks for the presence of a basic auth header
+// and validates its content.
+func NewBasicAuthMiddleware() goa.Middleware {
+	return func(h goa.Handler) goa.Handler {
+		return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+			// Retrieve and log basic auth info
+			user, pass, ok := req.BasicAuth()
+			var ErrUnauthorized = goa.NewErrorClass("unauthorized", 401)
+			if !ok {
+				goa.LogInfo(ctx, "failed basic auth")
+				return ErrUnauthorized("missing auth")
+			}
+			var lu User
+			db := GetDB(ctx)
+			err := db.C("users").Find(bson.M{"username": user}).One(&lu)
+			if err != nil {
+				return ErrUnauthorized("user not found")
+			}
+
+			err = lu.CheckPassword(pass)
+			if err != nil {
+				return ErrUnauthorized("incorrect password")
+			}
+			newctx := context.WithValue(ctx, UsernameKey, user)
+			// Proceed
+			return h(newctx, rw, req)
+		}
+	}
 }

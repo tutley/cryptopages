@@ -603,8 +603,6 @@ paths:
           description: OK
       schemes:
       - http
-      security:
-      - jwt: []
       summary: health health
       tags:
       - health
@@ -628,9 +626,7 @@ paths:
             $ref: '#/definitions/error'
       schemes:
       - http
-      security:
-      - jwt: []
-      summary: Download public/js
+      summary: Download ./js
   /jwt/signin:
     post:
       description: Creates a valid JWT
@@ -661,9 +657,7 @@ paths:
             type: file
       schemes:
       - http
-      security:
-      - jwt: []
-      summary: Download public/swagger/swagger.json
+      summary: Download ./swagger/swagger.json
   /ui:
     get:
       operationId: public#/ui
@@ -674,9 +668,7 @@ paths:
             type: file
       schemes:
       - http
-      security:
-      - jwt: []
-      summary: Download public/html/index.html
+      summary: Download ./js/index.html
   /user:
     get:
       description: |-

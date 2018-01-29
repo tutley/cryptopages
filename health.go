@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/goadesign/goa"
 	"github.com/tutley/cryptopages/app"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // HealthController implements the health resource.
@@ -20,11 +23,13 @@ func (c *HealthController) Health(ctx *app.HealthHealthContext) error {
 	// HealthController_Health: start_implement
 
 	// Put your logic here
-	// if _, ok := b.db.GetAccount(1); !ok {
-	// 	return fmt.Errorf("failed to connect to DB")
-	// }
-	// return c.OK([]byte("ok"))
-	return nil
+	var test map[string]interface{}
+	db := GetDB(ctx)
+	err := db.C("users").Find(bson.M{}).One(&test)
+	if err != nil {
+		return fmt.Errorf("failed to connect to DB")
+	}
+	return ctx.OK([]byte("ok"))
 
 	// HealthController_Health: end_implement
 }

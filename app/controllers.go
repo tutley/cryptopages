@@ -53,10 +53,9 @@ func MountHealthController(service *goa.Service, ctrl HealthController) {
 		}
 		return ctrl.Health(rctx)
 	}
-	h = handleSecurity("jwt", h)
 	h = handleHealthOrigin(h)
 	service.Mux.Handle("GET", "/_ah/health", ctrl.MuxHandler("health", h, nil))
-	service.LogInfo("mount", "ctrl", "Health", "action", "Health", "route", "GET /_ah/health", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Health", "action", "Health", "route", "GET /_ah/health")
 }
 
 // handleHealthOrigin applies the CORS response headers corresponding to the origin.
@@ -96,17 +95,15 @@ func MountJsController(service *goa.Service, ctrl JsController) {
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/js/*filepath", ctrl.MuxHandler("preflight", handleJsOrigin(cors.HandlePreflight()), nil))
 
-	h = ctrl.FileHandler("/js/*filepath", "public/js")
-	h = handleSecurity("jwt", h)
+	h = ctrl.FileHandler("/js/*filepath", "./js")
 	h = handleJsOrigin(h)
 	service.Mux.Handle("GET", "/js/*filepath", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Js", "files", "public/js", "route", "GET /js/*filepath", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Js", "files", "./js", "route", "GET /js/*filepath")
 
-	h = ctrl.FileHandler("/js/", "public/js/index.html")
-	h = handleSecurity("jwt", h)
+	h = ctrl.FileHandler("/js/", "js/index.html")
 	h = handleJsOrigin(h)
 	service.Mux.Handle("GET", "/js/", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Js", "files", "public/js/index.html", "route", "GET /js/", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Js", "files", "js/index.html", "route", "GET /js/")
 }
 
 // handleJsOrigin applies the CORS response headers corresponding to the origin.
@@ -200,11 +197,10 @@ func MountPublicController(service *goa.Service, ctrl PublicController) {
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/ui", ctrl.MuxHandler("preflight", handlePublicOrigin(cors.HandlePreflight()), nil))
 
-	h = ctrl.FileHandler("/ui", "public/html/index.html")
-	h = handleSecurity("jwt", h)
+	h = ctrl.FileHandler("/ui", "./js/index.html")
 	h = handlePublicOrigin(h)
 	service.Mux.Handle("GET", "/ui", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Public", "files", "public/html/index.html", "route", "GET /ui", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Public", "files", "./js/index.html", "route", "GET /ui")
 }
 
 // handlePublicOrigin applies the CORS response headers corresponding to the origin.
@@ -243,11 +239,10 @@ func MountSwaggerController(service *goa.Service, ctrl SwaggerController) {
 	var h goa.Handler
 	service.Mux.Handle("OPTIONS", "/swagger.json", ctrl.MuxHandler("preflight", handleSwaggerOrigin(cors.HandlePreflight()), nil))
 
-	h = ctrl.FileHandler("/swagger.json", "public/swagger/swagger.json")
-	h = handleSecurity("jwt", h)
+	h = ctrl.FileHandler("/swagger.json", "./swagger/swagger.json")
 	h = handleSwaggerOrigin(h)
 	service.Mux.Handle("GET", "/swagger.json", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Swagger", "files", "public/swagger/swagger.json", "route", "GET /swagger.json", "security", "jwt")
+	service.LogInfo("mount", "ctrl", "Swagger", "files", "./swagger/swagger.json", "route", "GET /swagger.json")
 }
 
 // handleSwaggerOrigin applies the CORS response headers corresponding to the origin.

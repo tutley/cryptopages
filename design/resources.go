@@ -83,22 +83,25 @@ var _ = Resource("user", func() {
 })
 
 var _ = Resource("public", func() {
+	NoSecurity()
 	Origin("*", func() {
 		Methods("GET", "OPTIONS")
 	})
-	Files("/ui", "public/html/index.html")
+	Files("/ui", "./js/index.html")
 })
 
 var _ = Resource("js", func() {
+	NoSecurity()
 	Origin("*", func() {
 		Methods("GET", "OPTIONS")
 	})
-	Files("/js/*filepath", "public/js")
+	Files("/js/*filepath", "./js")
 })
 
 var _ = Resource("swagger", func() {
+	NoSecurity()
 	Origin("*", func() {
 		Methods("GET", "OPTIONS")
 	})
-	Files("/swagger.json", "public/swagger/swagger.json")
+	Files("/swagger.json", "./swagger/swagger.json")
 })
