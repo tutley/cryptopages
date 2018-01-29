@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#pushd vueclient
+#npm run build
+#popd
+
+GOOS=linux GOARCH=amd64 go build
+
+tar -cvf cp.tar --files-from /dev/null
+tar -rvf cp.tar cryptopages
+tar -rvf cp.tar public
+tar -rvf cp.tar swagger
+tar -rvf cp.tar js
+tar -rvf cp.tar jwtkey
+gzip cp.tar
+mv cp.tar.gz cryptopages.tgz
+
+scp cryptopages.tgz aws:/home/ubuntu/web/cryptopages/cryptopages.tgz
+
+rm -f cryptopages
+rm -f cryptopages.tgz
+rm -f cp.tar 
+
+ssh aws << EOF
+ cd web/cryptopages
+ tar -zxf cryptopages.tgz
+ rm -f cryptopages.tgz
+ sudo systemctl restart cryptopages
+EOF
