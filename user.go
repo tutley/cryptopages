@@ -20,8 +20,60 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 	// UserController_Create: start_implement
 
 	// Put your logic here
+	db := GetDB(ctx.Context)
+	p := ctx.Payload
 
-	return nil
+	newEmail := Email{}
+	if p.Email != nil {
+		newEmail.Value = *p.Email.Value
+		newEmail.MakePublic = *p.Email.MakePublic
+	}
+	newLocation := Location{}
+	if p.Location != nil {
+		newLocation.Value = *p.Location.Value
+		newLocation.MakePublic = *p.Location.MakePublic
+	}
+	newCoins := Coins{}
+	if p.Coins != nil {
+		newCoins.BTC = *p.Coins.Btc
+		newCoins.LTC = *p.Coins.Ltc
+		newCoins.BCC = *p.Coins.Bcc
+		newCoins.ETH = *p.Coins.Eth
+		newCoins.NEO = *p.Coins.Neo
+		newCoins.XRP = *p.Coins.Xrp
+		newCoins.XLM = *p.Coins.Xlm
+	}
+	if p.Coins.Other != nil {
+		newCoins.Other = *p.Coins.Other.Name
+	}
+
+	newUser := User{
+		Name:     p.Name,
+		Username: p.Username,
+		Password: p.Password,
+		Email:    newEmail,
+		Location: newLocation,
+		Coins:    newCoins,
+	}
+	if p.Available != nil {
+		newUser.Available = *p.Available
+	}
+	if p.JobCategory != nil {
+		newUser.JobCategory = *p.JobCategory
+	}
+	if len(p.Skills) > 0 {
+		newUser.Skills = p.Skills
+	}
+	if p.JobDescription != nil {
+		newUser.JobDescription = *p.JobDescription
+	}
+
+	_, err := NewUser(newUser, db)
+	if err != nil {
+		// TODO: send internal server error?
+		return ctx.BadRequest(err)
+	}
+	return ctx.Created()
 
 	// UserController_Create: end_implement
 }

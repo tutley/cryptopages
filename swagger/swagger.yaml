@@ -606,6 +606,27 @@ paths:
       summary: health health
       tags:
       - health
+  /{filepath}:
+    get:
+      operationId: public#/*filepath
+      parameters:
+      - description: Relative file path
+        in: path
+        name: filepath
+        required: true
+        type: string
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: Download ./public/
   /js/{filepath}:
     get:
       operationId: js#/js/*filepath
@@ -658,17 +679,6 @@ paths:
       schemes:
       - http
       summary: Download ./swagger/swagger.json
-  /ui:
-    get:
-      operationId: public#/ui
-      responses:
-        "200":
-          description: File downloaded
-          schema:
-            type: file
-      schemes:
-      - http
-      summary: Download ./js/index.html
   /user:
     get:
       description: |-

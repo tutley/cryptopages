@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/goadesign/goa"
 	"github.com/tutley/cryptopages/app"
 	"gopkg.in/mgo.v2/bson"

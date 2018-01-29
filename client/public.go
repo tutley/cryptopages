@@ -19,16 +19,18 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"path"
 )
 
-// DownloadUI downloads index.html and writes it to the file dest.
+// Download downloads /files with the given filename and writes it to the file dest.
 // It returns the number of bytes downloaded in case of success.
-func (c *Client) DownloadUI(ctx context.Context, dest string) (int64, error) {
+func (c *Client) Download(ctx context.Context, filename, dest string) (int64, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
 	}
-	u := url.URL{Host: c.Host, Scheme: scheme, Path: "/ui"}
+	p := path.Join("/", filename)
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: p}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return 0, err
