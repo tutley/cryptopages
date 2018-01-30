@@ -8,6 +8,7 @@ import (
 
 	"github.com/bradialabs/shortid"
 	"github.com/goadesign/goa"
+	"github.com/tutley/cryptopages/app"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -135,13 +136,56 @@ func FindUserByEmail(email string, db *mgo.Database) (*User, error) {
 	return &user, nil
 }
 
+// SearchUsers finds users by the specified criteria and returns an array of results
+func SearchUsers(db *mgo.Database) (*[]User, error) {
+	users := []User{}
+	err := db.C("users").Find(bson.M{}).All(&users)
+	if err != nil {
+		return nil, err
+	}
+	return &users, nil
+}
+
 // Save Upserts the user into the database
 func (user *User) Save(db *mgo.Database) error {
 	_, err := db.C("users").UpsertId(user.ID, user)
 	return err
 }
 
+// Delete deletes the user from the database
+func (user *User) Delete(db *mgo.Database) error {
+	err := db.C("users").Remove(bson.M{"_id": user.ID})
+	return err
+}
+
 // CheckPassword will check a passed password string with the stored hash
 func (user *User) CheckPassword(password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+}
+
+// MapToCryptopagesUser takes a User object and converts it into an app.CryptopagesUser object
+func (user *User) MapToCryptopagesUser() (app.CryptopagesUser, error) {
+	// Something tells me I need to add error checking in here or I'm going to get null pointer problems
+	u := app.CryptopagesUser{
+		Username:       user.Username,
+		Name:           user.Name,
+		Available:      &user.Available,
+		JobCategory:    user.JobCategory,
+		JobDescription: &user.JobDescription,
+		Skills:         user.Skills,
+	}
+	u.Location.Value = &user.Location.Value
+	u.Location.MakePublic = &user.Location.MakePublic
+	u.Email.Value = &user.Email.Value
+	u.Email.MakePublic = &user.Email.MakePublic
+	u.Coins.Btc = &user.Coins.BTC
+	u.Coins.Ltc = &user.Coins.LTC
+	u.Coins.Bcc = &user.Coins.BCC
+	u.Coins.Eth = &user.Coins.ETH
+	u.Coins.Neo = &user.Coins.NEO
+	u.Coins.Xrp = &user.Coins.XRP
+	u.Coins.Xlm = &user.Coins.XLM
+	u.Coins.Other.Name = &user.Coins.Other
+
+	return u, nil
 }
