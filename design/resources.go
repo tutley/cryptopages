@@ -87,7 +87,7 @@ var _ = Resource("js", func() {
 	Origin("*", func() {
 		Methods("GET", "OPTIONS")
 	})
-	Files("/js/*filepath", "./js")
+	Files("/tjs/*filepath", "./tjs")
 })
 
 var _ = Resource("swagger", func() {

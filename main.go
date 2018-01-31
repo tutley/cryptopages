@@ -63,6 +63,9 @@ func main() {
 	}
 	app.UseJWTMiddleware(service, jwt.New(jwtResolver, validationHandler, app.NewJWTSecurity()))
 
+	// Security middleware used to secure the creation of JWT tokens.
+	app.UseSigninBasicAuthMiddleware(service, NewBasicAuthMiddleware())
+
 	// Mount "health" controller
 	c := NewHealthController(service)
 	app.MountHealthController(service, c)
@@ -96,6 +99,8 @@ func NewBasicAuthMiddleware() goa.Middleware {
 		return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 			// Retrieve and log basic auth info
 			user, pass, ok := req.BasicAuth()
+			log.Println("BASIC AUTH TRIGGERED")
+			log.Println("creds", user, pass)
 			var ErrUnauthorized = goa.NewErrorClass("unauthorized", 401)
 			if !ok {
 				goa.LogInfo(ctx, "failed basic auth")

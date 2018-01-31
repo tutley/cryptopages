@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"time"
+
 	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	uuid "github.com/satori/go.uuid"
 	"github.com/tutley/cryptopages/app"
-	"time"
 )
 
 // JWTController implements the jwt resource.
@@ -24,6 +25,7 @@ func (c *JWTController) Signin(ctx *app.SigninJWTContext) error {
 	// JWTController_Signin: start_implement
 
 	// Put your logic here
+	fmt.Println("ENTERED THE JWT LOGIN ACTION")
 	username := ctx.Value(UsernameKey).(string)
 	token := jwtgo.New(jwtgo.SigningMethodRS512)
 	in10m := time.Now().Add(time.Duration(10) * time.Minute).Unix()

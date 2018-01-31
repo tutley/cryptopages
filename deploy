@@ -10,7 +10,7 @@ tar -cvf cp.tar --files-from /dev/null
 tar -rvf cp.tar cryptopages
 tar -rvf cp.tar public
 tar -rvf cp.tar swagger
-tar -rvf cp.tar js
+tar -rvf cp.tar tjs
 tar -rvf cp.tar jwtkey
 gzip cp.tar
 mv cp.tar.gz cryptopages.tgz
