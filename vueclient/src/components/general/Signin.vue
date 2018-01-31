@@ -64,7 +64,8 @@ export default {
         )
           .then(response => {
             this.sending = false
-            let token = response.data.token.toString()
+            console.log(response)
+            let token = response.headers.authorization.toString().replace('Bearer ', '')
             localStorage.setItem('token', token)
             this.$store.dispatch('setIsLoggedIn', true)
             this.$router.push({ name: 'Hello' })

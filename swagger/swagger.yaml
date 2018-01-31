@@ -627,27 +627,6 @@ paths:
       schemes:
       - http
       summary: Download ./public/
-  /js/{filepath}:
-    get:
-      operationId: js#/js/*filepath
-      parameters:
-      - description: Relative file path
-        in: path
-        name: filepath
-        required: true
-        type: string
-      responses:
-        "200":
-          description: File downloaded
-          schema:
-            type: file
-        "404":
-          description: File not found
-          schema:
-            $ref: '#/definitions/error'
-      schemes:
-      - http
-      summary: Download ./js
   /jwt/signin:
     post:
       description: Creates a valid JWT
@@ -679,6 +658,27 @@ paths:
       schemes:
       - http
       summary: Download ./swagger/swagger.json
+  /tjs/{filepath}:
+    get:
+      operationId: js#/tjs/*filepath
+      parameters:
+      - description: Relative file path
+        in: path
+        name: filepath
+        required: true
+        type: string
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: Download ./tjs
   /user:
     get:
       description: |-

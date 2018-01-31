@@ -70,11 +70,13 @@ func handleHealthOrigin(h goa.Handler) goa.Handler {
 		if cors.MatchOrigin(origin, "*") {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
 			rw.Header().Set("Access-Control-Max-Age", "600")
 			rw.Header().Set("Access-Control-Allow-Credentials", "true")
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 			}
 			return h(ctx, rw, req)
 		}
@@ -93,17 +95,17 @@ type JsController interface {
 func MountJsController(service *goa.Service, ctrl JsController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/js/*filepath", ctrl.MuxHandler("preflight", handleJsOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/tjs/*filepath", ctrl.MuxHandler("preflight", handleJsOrigin(cors.HandlePreflight()), nil))
 
-	h = ctrl.FileHandler("/js/*filepath", "./js")
+	h = ctrl.FileHandler("/tjs/*filepath", "./tjs")
 	h = handleJsOrigin(h)
-	service.Mux.Handle("GET", "/js/*filepath", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Js", "files", "./js", "route", "GET /js/*filepath")
+	service.Mux.Handle("GET", "/tjs/*filepath", ctrl.MuxHandler("serve", h, nil))
+	service.LogInfo("mount", "ctrl", "Js", "files", "./tjs", "route", "GET /tjs/*filepath")
 
-	h = ctrl.FileHandler("/js/", "js/index.html")
+	h = ctrl.FileHandler("/tjs/", "tjs/index.html")
 	h = handleJsOrigin(h)
-	service.Mux.Handle("GET", "/js/", ctrl.MuxHandler("serve", h, nil))
-	service.LogInfo("mount", "ctrl", "Js", "files", "js/index.html", "route", "GET /js/")
+	service.Mux.Handle("GET", "/tjs/", ctrl.MuxHandler("serve", h, nil))
+	service.LogInfo("mount", "ctrl", "Js", "files", "tjs/index.html", "route", "GET /tjs/")
 }
 
 // handleJsOrigin applies the CORS response headers corresponding to the origin.
@@ -172,11 +174,13 @@ func handleJWTOrigin(h goa.Handler) goa.Handler {
 		if cors.MatchOrigin(origin, "*") {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
 			rw.Header().Set("Access-Control-Max-Age", "600")
 			rw.Header().Set("Access-Control-Allow-Credentials", "true")
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 			}
 			return h(ctx, rw, req)
 		}
@@ -400,11 +404,13 @@ func handleUserOrigin(h goa.Handler) goa.Handler {
 		if cors.MatchOrigin(origin, "*") {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
 			rw.Header().Set("Access-Control-Max-Age", "600")
 			rw.Header().Set("Access-Control-Allow-Credentials", "true")
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 			}
 			return h(ctx, rw, req)
 		}

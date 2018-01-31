@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"fmt"
-
 	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware/security/jwt"
@@ -116,6 +115,7 @@ func (c *UserController) Delete(ctx *app.DeleteUserContext) error {
 		return ctx.BadRequest(err)
 	}
 	return ctx.NoContent()
+
 	// UserController_Delete: end_implement
 }
 
@@ -247,5 +247,6 @@ func (c *UserController) Update(ctx *app.UpdateUserContext) error {
 		return ctx.BadRequest(err)
 	}
 	return ctx.NoContent()
+
 	// UserController_Update: end_implement
 }

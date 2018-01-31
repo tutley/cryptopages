@@ -448,9 +448,9 @@ func (cmd *DownloadCommand) Run(c *client.Client, args []string) error {
 		}
 		goto found
 	}
-	if strings.HasPrefix(rpath, "/js/") {
-		fnd = c.DownloadJs
-		rpath = rpath[4:]
+	if strings.HasPrefix(rpath, "/tjs/") {
+		fnd = c.DownloadTjs
+		rpath = rpath[5:]
 		if outfile == "" {
 			_, outfile = path.Split(rpath)
 		}

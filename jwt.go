@@ -25,7 +25,6 @@ func (c *JWTController) Signin(ctx *app.SigninJWTContext) error {
 	// JWTController_Signin: start_implement
 
 	// Put your logic here
-	fmt.Println("ENTERED THE JWT LOGIN ACTION")
 	username := ctx.Value(UsernameKey).(string)
 	token := jwtgo.New(jwtgo.SigningMethodRS512)
 	in10m := time.Now().Add(time.Duration(10) * time.Minute).Unix()

@@ -18,6 +18,8 @@ var _ = API("cryptopages", func() {
 	BasePath("/")
 	Origin("*", func() {
 		Methods("GET", "POST", "PUT", "PATCH", "DELETE")
+		Headers("Authorization", "Content-Type")
+		Expose("Authorization")
 		MaxAge(600)
 		Credentials()
 	})

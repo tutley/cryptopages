@@ -22,14 +22,14 @@ import (
 	"path"
 )
 
-// DownloadJs downloads /files with the given filename and writes it to the file dest.
+// DownloadTjs downloads /files with the given filename and writes it to the file dest.
 // It returns the number of bytes downloaded in case of success.
-func (c *Client) DownloadJs(ctx context.Context, filename, dest string) (int64, error) {
+func (c *Client) DownloadTjs(ctx context.Context, filename, dest string) (int64, error) {
 	scheme := c.Scheme
 	if scheme == "" {
 		scheme = "http"
 	}
-	p := path.Join("/js/", filename)
+	p := path.Join("/tjs/", filename)
 	u := url.URL{Host: c.Host, Scheme: scheme, Path: p}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
