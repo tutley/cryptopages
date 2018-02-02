@@ -43,10 +43,11 @@
             <v-icon dark>search</v-icon>
           </v-btn>
         </v-fab-transition>
+        <div>&nbsp;</div>
         <router-view></router-view>
          <v-footer class="pa-3">
           <v-spacer></v-spacer>
-          <div>Tom Utley - © {{ new Date().getFullYear() }}</div>
+          <div><a href="https://tomutley.com/">Tom Utley</a></div>
         </v-footer>
       </v-content>
   </v-app>

@@ -592,20 +592,6 @@ info:
   title: CryptoPages - Do business with fellow crypto enthusiasts.
   version: ""
 paths:
-  /_ah/health:
-    get:
-      description: Perform health check.
-      operationId: health#health
-      produces:
-      - text/plain
-      responses:
-        "200":
-          description: OK
-      schemes:
-      - http
-      summary: health health
-      tags:
-      - health
   /{filepath}:
     get:
       operationId: public#/*filepath
@@ -627,7 +613,21 @@ paths:
       schemes:
       - http
       summary: Download ./public/
-  /jwt/signin:
+  /api/_ah/health:
+    get:
+      description: Perform health check.
+      operationId: health#health
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: OK
+      schemes:
+      - http
+      summary: health health
+      tags:
+      - health
+  /api/jwt/signin:
     post:
       description: Creates a valid JWT
       operationId: jwt#signin
@@ -647,39 +647,7 @@ paths:
       summary: signin jwt
       tags:
       - jwt
-  /swagger.json:
-    get:
-      operationId: swagger#/swagger.json
-      responses:
-        "200":
-          description: File downloaded
-          schema:
-            type: file
-      schemes:
-      - http
-      summary: Download ./swagger/swagger.json
-  /tjs/{filepath}:
-    get:
-      operationId: js#/tjs/*filepath
-      parameters:
-      - description: Relative file path
-        in: path
-        name: filepath
-        required: true
-        type: string
-      responses:
-        "200":
-          description: File downloaded
-          schema:
-            type: file
-        "404":
-          description: File not found
-          schema:
-            $ref: '#/definitions/error'
-      schemes:
-      - http
-      summary: Download ./tjs
-  /user:
+  /api/user:
     get:
       description: |-
         Search users based on different criteria
@@ -764,7 +732,7 @@ paths:
       summary: create user
       tags:
       - user
-  /user/{username}:
+  /api/user/{username}:
     delete:
       description: |-
         Required security scopes:
@@ -868,6 +836,38 @@ paths:
       summary: update user
       tags:
       - user
+  /swagger.json:
+    get:
+      operationId: swagger#/swagger.json
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+      schemes:
+      - http
+      summary: Download ./swagger/swagger.json
+  /tjs/{filepath}:
+    get:
+      operationId: js#/tjs/*filepath
+      parameters:
+      - description: Relative file path
+        in: path
+        name: filepath
+        required: true
+        type: string
+      responses:
+        "200":
+          description: File downloaded
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            $ref: '#/definitions/error'
+      schemes:
+      - http
+      summary: Download ./tjs
 produces:
 - application/json
 responses:

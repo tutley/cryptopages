@@ -60,7 +60,7 @@ func CreateUserBadRequest(t goatest.TInterface, ctx context.Context, service *go
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user"),
+		Path: fmt.Sprintf("/api/user"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -140,7 +140,7 @@ func CreateUserCreated(t goatest.TInterface, ctx context.Context, service *goa.S
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user"),
+		Path: fmt.Sprintf("/api/user"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -213,7 +213,7 @@ func CreateUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user"),
+		Path: fmt.Sprintf("/api/user"),
 	}
 	req, _err := http.NewRequest("POST", u.String(), nil)
 	if _err != nil {
@@ -275,7 +275,7 @@ func DeleteUserBadRequest(t goatest.TInterface, ctx context.Context, service *go
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -344,7 +344,7 @@ func DeleteUserNoContent(t goatest.TInterface, ctx context.Context, service *goa
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -406,7 +406,7 @@ func DeleteUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, err := http.NewRequest("DELETE", u.String(), nil)
 	if err != nil {
@@ -481,7 +481,7 @@ func SearchUserBadRequest(t goatest.TInterface, ctx context.Context, service *go
 		query["skills"] = sliceVal
 	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/user"),
+		Path:     fmt.Sprintf("/api/user"),
 		RawQuery: query.Encode(),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
@@ -575,7 +575,7 @@ func SearchUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 		query["skills"] = sliceVal
 	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/user"),
+		Path:     fmt.Sprintf("/api/user"),
 		RawQuery: query.Encode(),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
@@ -662,7 +662,7 @@ func SearchUserOK(t goatest.TInterface, ctx context.Context, service *goa.Servic
 		query["skills"] = sliceVal
 	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/user"),
+		Path:     fmt.Sprintf("/api/user"),
 		RawQuery: query.Encode(),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
@@ -761,7 +761,7 @@ func SearchUserOKTiny(t goatest.TInterface, ctx context.Context, service *goa.Se
 		query["skills"] = sliceVal
 	}
 	u := &url.URL{
-		Path:     fmt.Sprintf("/user"),
+		Path:     fmt.Sprintf("/api/user"),
 		RawQuery: query.Encode(),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
@@ -847,7 +847,7 @@ func ShowUserBadRequest(t goatest.TInterface, ctx context.Context, service *goa.
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -916,7 +916,7 @@ func ShowUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.Se
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -978,7 +978,7 @@ func ShowUserOK(t goatest.TInterface, ctx context.Context, service *goa.Service,
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -1052,7 +1052,7 @@ func ShowUserOKTiny(t goatest.TInterface, ctx context.Context, service *goa.Serv
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
@@ -1136,7 +1136,7 @@ func UpdateUserBadRequest(t goatest.TInterface, ctx context.Context, service *go
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, _err := http.NewRequest("PATCH", u.String(), nil)
 	if _err != nil {
@@ -1217,7 +1217,7 @@ func UpdateUserNoContent(t goatest.TInterface, ctx context.Context, service *goa
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, _err := http.NewRequest("PATCH", u.String(), nil)
 	if _err != nil {
@@ -1291,7 +1291,7 @@ func UpdateUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/user/%v", username),
+		Path: fmt.Sprintf("/api/user/%v", username),
 	}
 	req, _err := http.NewRequest("PATCH", u.String(), nil)
 	if _err != nil {

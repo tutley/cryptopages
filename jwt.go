@@ -2,12 +2,11 @@ package main
 
 import (
 	"fmt"
-	"time"
-
 	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	uuid "github.com/satori/go.uuid"
 	"github.com/tutley/cryptopages/app"
+	"time"
 )
 
 // JWTController implements the jwt resource.

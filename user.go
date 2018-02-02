@@ -26,6 +26,7 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 
 	// Put your logic here
 	db := GetDB(ctx.Context)
+	// try slapping payload into the db
 	p := ctx.Payload
 
 	newEmail := Email{}

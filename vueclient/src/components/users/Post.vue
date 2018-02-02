@@ -2,22 +2,51 @@
   <v-container fluid>
     <v-layout row>
       <v-flex xs12 sm8 offset-sm2>
-        <h4>Need to refactor this to be the user signup page</h4>
-        <!-- <v-form v-model="valid" ref="form" lazy-validation>
+        <p class="display-2">Sign Up!</p>
+        <p class="body-1">Provide as much or as little information as you wish. You must create 
+          an account to be able to search and view listings, but you don't have to make yourself 
+          visible to others. Simply check "available" if you want others to be able to find you!</p>
+        <v-form v-model="valid" ref="form" lazy-validation>
           <v-text-field
-            label="Title"
-            v-model="title"
-            :rules="titleRules"
+            label="Username"
+            v-model="user.username"
+            :rules="usernameRules"
             :counter="60"
+            hint="This is your identifier on this site. It must be unique, and others will see it."
+            @blur="checkUsername"
             required
           ></v-text-field>
           <v-text-field
-            label="Body"
-            v-model="body"
-            multi-line
-            :rules="bodyRules"
+            label="Password"
+            v-model="user.password"
+            :rules="passwordRules"
             required
+            type="password"
           ></v-text-field>
+          <v-checkbox label="Available? (included in search results)" v-model="user.available"></v-checkbox>
+          <v-text-field
+            label="Name"
+            v-model="user.name.value"
+            :rules="nameRules"
+            hint="Put your name here."
+          ></v-text-field>
+          <v-text-field
+            label="Email"
+            v-model="user.email.value"
+            :rules="emailRules"
+            hint="Let others know the best email to reach you with. You have the option to hide this."
+          ></v-text-field>
+          <v-checkbox label="Display Email?" v-model="user.email.makePublic"></v-checkbox>
+           <v-select
+              :items="jobCategories"
+              v-model="user.jobCategory"
+              label="Job Category"
+              single-line
+              item-text="name"
+              item-value="val"
+              return-object
+              hint="What type of work are you interested in?"
+            ></v-select>
           <v-btn
             @click="submit"
             :disabled="!valid"
@@ -31,7 +60,7 @@
           <p v-for="(error, i) in errors" :key="i">
             {{ error.message }}
           </p>
-        </v-alert> -->
+        </v-alert>
       </v-flex>
     </v-layout>
   </v-container>
@@ -43,26 +72,69 @@ import { HTTP } from '../../api'
 export default {
   data: () => ({
     sending: false,
-    title: '',
-    titleRules: [
-      v => !!v || 'Title is required',
-      v => (v && v.length <= 60) || 'Title mus tbe less than 60 characters'
+    usernameAvailable: true,
+    user: {
+      username: '',
+      password: '',
+      available: true,
+      name: '',
+      email: {
+        value: '',
+        makePublic: true
+      },
+      location: {
+        value: '',
+        makePublic: true
+      },
+      skills: [],
+      jobCategory: '',
+      jobDescription: '',
+      coins: {
+        bcc: false,
+        btc: false,
+        eth: false,
+        ltc: false,
+        neo: false,
+        other: {
+          name: ''
+        },
+        xlm: false,
+        xrp: false
+      }
+    },
+    jobCategories: [
+      { name: 'Hardware', val: 'hardware' },
+      { name: 'Software', val: 'software' },
+      { name: 'Writing', val: 'writing' },
+      { name: 'Legal', val: 'legal' },
+      { name: 'Labor', val: 'labor' },
+      { name: 'Automotive', val: 'automotive' },
+      { name: 'Services', val: 'services' },
+      { name: 'Others', val: 'others' }
     ],
-    body: '',
-    bodyRules: [v => !!v || 'Body is required'],
+    usernameRules: [
+      v => !!v || 'Username is required',
+      v => (v && v.length <= 60) || 'Username must be less than 60 characters',
+      v => this.usernameAvailable || 'Username is not available, sorry'
+    ],
+    passwordRules: [v => !!v || 'Password is required'],
+    nameRules: [],
+    emailRules: [],
     errors: [],
     valid: true
   }),
   methods: {
+    checkUsername(un) {
+      // check the value of this.user.username to see if the user already exists in the db
+      return false
+    },
     submit() {
       if (this.$refs.form.validate()) {
         this.sending = true
-        HTTP.post('user', {
-          title: this.title,
-          body: this.body
-        })
+        HTTP.post('/user', this.user)
           .then(response => {
             this.sending = false
+            console.log(response.data)
             this.$router.push({ name: 'User Detail', params: { id: response.data.username } })
           })
           .catch(e => {

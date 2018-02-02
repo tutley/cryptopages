@@ -15,8 +15,8 @@ var _ = API("cryptopages", func() {
 		Email("tom@tomutley.com")
 		URL("https://tomutley.com")
 	})
-	BasePath("/")
-	Origin("*", func() {
+	BasePath("/api")
+	Origin("/(localhost|cryptopages.club)/", func() {
 		Methods("GET", "POST", "PUT", "PATCH", "DELETE")
 		Headers("Authorization", "Content-Type")
 		Expose("Authorization")

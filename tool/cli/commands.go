@@ -97,7 +97,7 @@ func RegisterCommands(app *cobra.Command, c *client.Client) {
 	}
 	tmp1 := new(CreateUserCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/user"]`,
+		Use:   `user ["/api/user"]`,
 		Short: ``,
 		Long: `
 
@@ -146,7 +146,7 @@ Payload example:
 	}
 	tmp2 := new(DeleteUserCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/user/USERNAME"]`,
+		Use:   `user ["/api/user/USERNAME"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp2.Run(c, args) },
 	}
@@ -160,7 +160,7 @@ Payload example:
 	}
 	tmp3 := new(HealthHealthCommand)
 	sub = &cobra.Command{
-		Use:   `health ["/_ah/health"]`,
+		Use:   `health ["/api/_ah/health"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp3.Run(c, args) },
 	}
@@ -174,7 +174,7 @@ Payload example:
 	}
 	tmp4 := new(SearchUserCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/user"]`,
+		Use:   `user ["/api/user"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp4.Run(c, args) },
 	}
@@ -188,7 +188,7 @@ Payload example:
 	}
 	tmp5 := new(ShowUserCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/user/USERNAME"]`,
+		Use:   `user ["/api/user/USERNAME"]`,
 		Short: ``,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp5.Run(c, args) },
 	}
@@ -202,7 +202,7 @@ Payload example:
 	}
 	tmp6 := new(SigninJWTCommand)
 	sub = &cobra.Command{
-		Use:   `jwt ["/jwt/signin"]`,
+		Use:   `jwt ["/api/jwt/signin"]`,
 		Short: `This resource uses JWT to secure its endpoints`,
 		RunE:  func(cmd *cobra.Command, args []string) error { return tmp6.Run(c, args) },
 	}
@@ -216,7 +216,7 @@ Payload example:
 	}
 	tmp7 := new(UpdateUserCommand)
 	sub = &cobra.Command{
-		Use:   `user ["/user/USERNAME"]`,
+		Use:   `user ["/api/user/USERNAME"]`,
 		Short: ``,
 		Long: `
 
@@ -486,7 +486,7 @@ func (cmd *HealthHealthCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/_ah/health"
+		path = "/api/_ah/health"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -510,7 +510,7 @@ func (cmd *SigninJWTCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/jwt/signin"
+		path = "/api/jwt/signin"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -534,7 +534,7 @@ func (cmd *CreateUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/user"
+		path = "/api/user"
 	}
 	var payload client.CreateUserPayload
 	if cmd.Payload != "" {
@@ -567,7 +567,7 @@ func (cmd *DeleteUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/user/%v", url.QueryEscape(cmd.Username))
+		path = fmt.Sprintf("/api/user/%v", url.QueryEscape(cmd.Username))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -593,7 +593,7 @@ func (cmd *SearchUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = "/user"
+		path = "/api/user"
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -623,7 +623,7 @@ func (cmd *ShowUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/user/%v", url.QueryEscape(cmd.Username))
+		path = fmt.Sprintf("/api/user/%v", url.QueryEscape(cmd.Username))
 	}
 	logger := goa.NewLogger(log.New(os.Stderr, "", log.LstdFlags))
 	ctx := goa.WithLogger(context.Background(), logger)
@@ -649,7 +649,7 @@ func (cmd *UpdateUserCommand) Run(c *client.Client, args []string) error {
 	if len(args) > 0 {
 		path = args[0]
 	} else {
-		path = fmt.Sprintf("/user/%v", url.QueryEscape(cmd.Username))
+		path = fmt.Sprintf("/api/user/%v", url.QueryEscape(cmd.Username))
 	}
 	var payload client.UserPayload
 	if cmd.Payload != "" {

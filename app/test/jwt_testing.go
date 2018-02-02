@@ -50,7 +50,7 @@ func SigninJWTNoContent(t goatest.TInterface, ctx context.Context, service *goa.
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/jwt/signin"),
+		Path: fmt.Sprintf("/api/jwt/signin"),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
@@ -111,7 +111,7 @@ func SigninJWTUnauthorized(t goatest.TInterface, ctx context.Context, service *g
 	// Setup request context
 	rw := httptest.NewRecorder()
 	u := &url.URL{
-		Path: fmt.Sprintf("/jwt/signin"),
+		Path: fmt.Sprintf("/api/jwt/signin"),
 	}
 	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {

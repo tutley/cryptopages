@@ -16,6 +16,7 @@ import (
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/cors"
 	"net/http"
+	"regexp"
 )
 
 // initService sets up the service encoders, decoders and mux.
@@ -39,7 +40,7 @@ type HealthController interface {
 func MountHealthController(service *goa.Service, ctrl HealthController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/_ah/health", ctrl.MuxHandler("preflight", handleHealthOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/api/_ah/health", ctrl.MuxHandler("preflight", handleHealthOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -54,12 +55,13 @@ func MountHealthController(service *goa.Service, ctrl HealthController) {
 		return ctrl.Health(rctx)
 	}
 	h = handleHealthOrigin(h)
-	service.Mux.Handle("GET", "/_ah/health", ctrl.MuxHandler("health", h, nil))
-	service.LogInfo("mount", "ctrl", "Health", "action", "Health", "route", "GET /_ah/health")
+	service.Mux.Handle("GET", "/api/_ah/health", ctrl.MuxHandler("health", h, nil))
+	service.LogInfo("mount", "ctrl", "Health", "action", "Health", "route", "GET /api/_ah/health")
 }
 
 // handleHealthOrigin applies the CORS response headers corresponding to the origin.
 func handleHealthOrigin(h goa.Handler) goa.Handler {
+	spec0 := regexp.MustCompile("(localhost|cryptopages.club)")
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -67,9 +69,10 @@ func handleHealthOrigin(h goa.Handler) goa.Handler {
 			// Not a CORS request
 			return h(ctx, rw, req)
 		}
-		if cors.MatchOrigin(origin, "*") {
+		if cors.MatchOriginRegexp(origin, spec0) {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
 			rw.Header().Set("Access-Control-Max-Age", "600")
 			rw.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -110,6 +113,7 @@ func MountJsController(service *goa.Service, ctrl JsController) {
 
 // handleJsOrigin applies the CORS response headers corresponding to the origin.
 func handleJsOrigin(h goa.Handler) goa.Handler {
+	spec1 := regexp.MustCompile("(localhost|cryptopages.club)")
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -124,6 +128,20 @@ func handleJsOrigin(h goa.Handler) goa.Handler {
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+			}
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOriginRegexp(origin, spec1) {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 			}
 			return h(ctx, rw, req)
 		}
@@ -142,7 +160,7 @@ type JWTController interface {
 func MountJWTController(service *goa.Service, ctrl JWTController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/jwt/signin", ctrl.MuxHandler("preflight", handleJWTOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/api/jwt/signin", ctrl.MuxHandler("preflight", handleJWTOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -158,12 +176,13 @@ func MountJWTController(service *goa.Service, ctrl JWTController) {
 	}
 	h = handleSecurity("SigninBasicAuth", h)
 	h = handleJWTOrigin(h)
-	service.Mux.Handle("POST", "/jwt/signin", ctrl.MuxHandler("signin", h, nil))
-	service.LogInfo("mount", "ctrl", "JWT", "action", "Signin", "route", "POST /jwt/signin", "security", "SigninBasicAuth")
+	service.Mux.Handle("POST", "/api/jwt/signin", ctrl.MuxHandler("signin", h, nil))
+	service.LogInfo("mount", "ctrl", "JWT", "action", "Signin", "route", "POST /api/jwt/signin", "security", "SigninBasicAuth")
 }
 
 // handleJWTOrigin applies the CORS response headers corresponding to the origin.
 func handleJWTOrigin(h goa.Handler) goa.Handler {
+	spec0 := regexp.MustCompile("(localhost|cryptopages.club)")
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -171,9 +190,10 @@ func handleJWTOrigin(h goa.Handler) goa.Handler {
 			// Not a CORS request
 			return h(ctx, rw, req)
 		}
-		if cors.MatchOrigin(origin, "*") {
+		if cors.MatchOriginRegexp(origin, spec0) {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
 			rw.Header().Set("Access-Control-Max-Age", "600")
 			rw.Header().Set("Access-Control-Allow-Credentials", "true")
@@ -214,6 +234,7 @@ func MountPublicController(service *goa.Service, ctrl PublicController) {
 
 // handlePublicOrigin applies the CORS response headers corresponding to the origin.
 func handlePublicOrigin(h goa.Handler) goa.Handler {
+	spec1 := regexp.MustCompile("(localhost|cryptopages.club)")
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -228,6 +249,20 @@ func handlePublicOrigin(h goa.Handler) goa.Handler {
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+			}
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOriginRegexp(origin, spec1) {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 			}
 			return h(ctx, rw, req)
 		}
@@ -256,6 +291,7 @@ func MountSwaggerController(service *goa.Service, ctrl SwaggerController) {
 
 // handleSwaggerOrigin applies the CORS response headers corresponding to the origin.
 func handleSwaggerOrigin(h goa.Handler) goa.Handler {
+	spec1 := regexp.MustCompile("(localhost|cryptopages.club)")
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -270,6 +306,20 @@ func handleSwaggerOrigin(h goa.Handler) goa.Handler {
 			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
 				// We are handling a preflight request
 				rw.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+			}
+			return h(ctx, rw, req)
+		}
+		if cors.MatchOriginRegexp(origin, spec1) {
+			ctx = goa.WithLogContext(ctx, "origin", origin)
+			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
+			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
+			rw.Header().Set("Access-Control-Max-Age", "600")
+			rw.Header().Set("Access-Control-Allow-Credentials", "true")
+			if acrm := req.Header.Get("Access-Control-Request-Method"); acrm != "" {
+				// We are handling a preflight request
+				rw.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE")
+				rw.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
 			}
 			return h(ctx, rw, req)
 		}
@@ -292,8 +342,8 @@ type UserController interface {
 func MountUserController(service *goa.Service, ctrl UserController) {
 	initService(service)
 	var h goa.Handler
-	service.Mux.Handle("OPTIONS", "/user", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
-	service.Mux.Handle("OPTIONS", "/user/:username", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/api/user", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
+	service.Mux.Handle("OPTIONS", "/api/user/:username", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -314,8 +364,8 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 		return ctrl.Create(rctx)
 	}
 	h = handleUserOrigin(h)
-	service.Mux.Handle("POST", "/user", ctrl.MuxHandler("create", h, unmarshalCreateUserPayload))
-	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /user")
+	service.Mux.Handle("POST", "/api/user", ctrl.MuxHandler("create", h, unmarshalCreateUserPayload))
+	service.LogInfo("mount", "ctrl", "User", "action", "Create", "route", "POST /api/user")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -331,8 +381,8 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 	}
 	h = handleSecurity("jwt", h, "api:access")
 	h = handleUserOrigin(h)
-	service.Mux.Handle("DELETE", "/user/:username", ctrl.MuxHandler("delete", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Delete", "route", "DELETE /user/:username", "security", "jwt")
+	service.Mux.Handle("DELETE", "/api/user/:username", ctrl.MuxHandler("delete", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Delete", "route", "DELETE /api/user/:username", "security", "jwt")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -348,8 +398,8 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 	}
 	h = handleSecurity("jwt", h, "api:access")
 	h = handleUserOrigin(h)
-	service.Mux.Handle("GET", "/user", ctrl.MuxHandler("search", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Search", "route", "GET /user", "security", "jwt")
+	service.Mux.Handle("GET", "/api/user", ctrl.MuxHandler("search", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Search", "route", "GET /api/user", "security", "jwt")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -365,8 +415,8 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 	}
 	h = handleSecurity("jwt", h, "api:access")
 	h = handleUserOrigin(h)
-	service.Mux.Handle("GET", "/user/:username", ctrl.MuxHandler("show", h, nil))
-	service.LogInfo("mount", "ctrl", "User", "action", "Show", "route", "GET /user/:username", "security", "jwt")
+	service.Mux.Handle("GET", "/api/user/:username", ctrl.MuxHandler("show", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "Show", "route", "GET /api/user/:username", "security", "jwt")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request
@@ -388,12 +438,13 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 	}
 	h = handleSecurity("jwt", h, "api:access")
 	h = handleUserOrigin(h)
-	service.Mux.Handle("PATCH", "/user/:username", ctrl.MuxHandler("update", h, unmarshalUpdateUserPayload))
-	service.LogInfo("mount", "ctrl", "User", "action", "Update", "route", "PATCH /user/:username", "security", "jwt")
+	service.Mux.Handle("PATCH", "/api/user/:username", ctrl.MuxHandler("update", h, unmarshalUpdateUserPayload))
+	service.LogInfo("mount", "ctrl", "User", "action", "Update", "route", "PATCH /api/user/:username", "security", "jwt")
 }
 
 // handleUserOrigin applies the CORS response headers corresponding to the origin.
 func handleUserOrigin(h goa.Handler) goa.Handler {
+	spec0 := regexp.MustCompile("(localhost|cryptopages.club)")
 
 	return func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		origin := req.Header.Get("Origin")
@@ -401,9 +452,10 @@ func handleUserOrigin(h goa.Handler) goa.Handler {
 			// Not a CORS request
 			return h(ctx, rw, req)
 		}
-		if cors.MatchOrigin(origin, "*") {
+		if cors.MatchOriginRegexp(origin, spec0) {
 			ctx = goa.WithLogContext(ctx, "origin", origin)
 			rw.Header().Set("Access-Control-Allow-Origin", origin)
+			rw.Header().Set("Vary", "Origin")
 			rw.Header().Set("Access-Control-Expose-Headers", "Authorization")
 			rw.Header().Set("Access-Control-Max-Age", "600")
 			rw.Header().Set("Access-Control-Allow-Credentials", "true")

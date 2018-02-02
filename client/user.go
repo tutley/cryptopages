@@ -73,7 +73,7 @@ type CreateUserPayload struct {
 // CreateUserPath computes a request path to the create action of user.
 func CreateUserPath() string {
 
-	return fmt.Sprintf("/user")
+	return fmt.Sprintf("/api/user")
 }
 
 // Register new user
@@ -110,7 +110,7 @@ func (c *Client) NewCreateUserRequest(ctx context.Context, path string, payload 
 func DeleteUserPath(username string) string {
 	param0 := username
 
-	return fmt.Sprintf("/user/%s", param0)
+	return fmt.Sprintf("/api/user/%s", param0)
 }
 
 // DeleteUser makes a request to the delete action endpoint of the user resource
@@ -144,7 +144,7 @@ func (c *Client) NewDeleteUserRequest(ctx context.Context, path string) (*http.R
 // SearchUserPath computes a request path to the search action of user.
 func SearchUserPath() string {
 
-	return fmt.Sprintf("/user")
+	return fmt.Sprintf("/api/user")
 }
 
 // Search users based on different criteria
@@ -190,7 +190,7 @@ func (c *Client) NewSearchUserRequest(ctx context.Context, path string, coins *s
 func ShowUserPath(username string) string {
 	param0 := username
 
-	return fmt.Sprintf("/user/%s", param0)
+	return fmt.Sprintf("/api/user/%s", param0)
 }
 
 // Get user by username
@@ -225,7 +225,7 @@ func (c *Client) NewShowUserRequest(ctx context.Context, path string) (*http.Req
 func UpdateUserPath(username string) string {
 	param0 := username
 
-	return fmt.Sprintf("/user/%s", param0)
+	return fmt.Sprintf("/api/user/%s", param0)
 }
 
 // UpdateUser makes a request to the update action endpoint of the user resource

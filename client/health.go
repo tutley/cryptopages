@@ -21,7 +21,7 @@ import (
 // HealthHealthPath computes a request path to the health action of health.
 func HealthHealthPath() string {
 
-	return fmt.Sprintf("/_ah/health")
+	return fmt.Sprintf("/api/_ah/health")
 }
 
 // Perform health check.
