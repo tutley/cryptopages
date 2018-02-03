@@ -19,6 +19,36 @@ import (
 	"net/url"
 )
 
+// CheckUsernameUserPath computes a request path to the checkUsername action of user.
+func CheckUsernameUserPath(username string) string {
+	param0 := username
+
+	return fmt.Sprintf("/api/user/checkUsername/%s", param0)
+}
+
+// CheckUsernameUser makes a request to the checkUsername action endpoint of the user resource
+func (c *Client) CheckUsernameUser(ctx context.Context, path string) (*http.Response, error) {
+	req, err := c.NewCheckUsernameUserRequest(ctx, path)
+	if err != nil {
+		return nil, err
+	}
+	return c.Client.Do(ctx, req)
+}
+
+// NewCheckUsernameUserRequest create the request corresponding to the checkUsername action endpoint of the user resource.
+func (c *Client) NewCheckUsernameUserRequest(ctx context.Context, path string) (*http.Request, error) {
+	scheme := c.Scheme
+	if scheme == "" {
+		scheme = "http"
+	}
+	u := url.URL{Host: c.Host, Scheme: scheme, Path: path}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+	return req, nil
+}
+
 // CreateUserPayload is the user create action payload.
 type CreateUserPayload struct {
 	// Is this user available to provide work
@@ -35,11 +65,8 @@ type CreateUserPayload struct {
 		Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 		// Accepts Neo
 		Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-		// Accepts some other coin
-		Other *struct {
-			// Name of the other coin accepted
-			Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-		} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+		// Accepts Some Other Coin
+		Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 		// Accepts Lumen
 		Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 		// Accepts Ripple
@@ -63,6 +90,8 @@ type CreateUserPayload struct {
 	} `form:"location,omitempty" json:"location,omitempty" xml:"location,omitempty"`
 	// The user's full name
 	Name string `form:"name" json:"name" xml:"name"`
+	// Name of the other coin a user accepts
+	OtherCoin *string `form:"otherCoin,omitempty" json:"otherCoin,omitempty" xml:"otherCoin,omitempty"`
 	// A password (only exposed to user)
 	Password string   `form:"password" json:"password" xml:"password"`
 	Skills   []string `form:"skills,omitempty" json:"skills,omitempty" xml:"skills,omitempty"`

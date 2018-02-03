@@ -42,11 +42,8 @@ type CryptopagesUser struct {
 		Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 		// Accepts Neo
 		Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-		// Accepts some other coin
-		Other *struct {
-			// Name of the other coin accepted
-			Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-		} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+		// Accepts Some Other Coin
+		Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 		// Accepts Lumen
 		Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 		// Accepts Ripple
@@ -72,6 +69,8 @@ type CryptopagesUser struct {
 	} `form:"location,omitempty" json:"location,omitempty" xml:"location,omitempty"`
 	// The user's full name
 	Name string `form:"name" json:"name" xml:"name"`
+	// Name of the other coin a user accepts
+	OtherCoin *string `form:"otherCoin,omitempty" json:"otherCoin,omitempty" xml:"otherCoin,omitempty"`
 	// A password (only exposed to user)
 	Password *string  `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
 	Skills   []string `form:"skills,omitempty" json:"skills,omitempty" xml:"skills,omitempty"`

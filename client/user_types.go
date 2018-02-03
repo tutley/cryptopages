@@ -32,11 +32,8 @@ type userPayload struct {
 		Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 		// Accepts Neo
 		Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-		// Accepts some other coin
-		Other *struct {
-			// Name of the other coin accepted
-			Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-		} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+		// Accepts Some Other Coin
+		Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 		// Accepts Lumen
 		Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 		// Accepts Ripple
@@ -60,6 +57,8 @@ type userPayload struct {
 	} `form:"location,omitempty" json:"location,omitempty" xml:"location,omitempty"`
 	// The user's full name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Name of the other coin a user accepts
+	OtherCoin *string `form:"otherCoin,omitempty" json:"otherCoin,omitempty" xml:"otherCoin,omitempty"`
 	// A password (only exposed to user)
 	Password *string  `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
 	Skills   []string `form:"skills,omitempty" json:"skills,omitempty" xml:"skills,omitempty"`
@@ -129,11 +128,8 @@ func (ut *userPayload) Publicize() *UserPayload {
 			Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 			// Accepts Neo
 			Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-			// Accepts some other coin
-			Other *struct {
-				// Name of the other coin accepted
-				Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-			} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+			// Accepts Some Other Coin
+			Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 			// Accepts Lumen
 			Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 			// Accepts Ripple
@@ -155,13 +151,7 @@ func (ut *userPayload) Publicize() *UserPayload {
 			pub.Coins.Neo = ut.Coins.Neo
 		}
 		if ut.Coins.Other != nil {
-			pub.Coins.Other = &struct {
-				// Name of the other coin accepted
-				Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-			}{}
-			if ut.Coins.Other.Name != nil {
-				pub.Coins.Other.Name = ut.Coins.Other.Name
-			}
+			pub.Coins.Other = ut.Coins.Other
 		}
 		if ut.Coins.Xlm != nil {
 			pub.Coins.Xlm = ut.Coins.Xlm
@@ -207,6 +197,9 @@ func (ut *userPayload) Publicize() *UserPayload {
 	if ut.Name != nil {
 		pub.Name = ut.Name
 	}
+	if ut.OtherCoin != nil {
+		pub.OtherCoin = ut.OtherCoin
+	}
 	if ut.Password != nil {
 		pub.Password = ut.Password
 	}
@@ -235,11 +228,8 @@ type UserPayload struct {
 		Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 		// Accepts Neo
 		Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-		// Accepts some other coin
-		Other *struct {
-			// Name of the other coin accepted
-			Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-		} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+		// Accepts Some Other Coin
+		Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 		// Accepts Lumen
 		Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 		// Accepts Ripple
@@ -263,6 +253,8 @@ type UserPayload struct {
 	} `form:"location,omitempty" json:"location,omitempty" xml:"location,omitempty"`
 	// The user's full name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Name of the other coin a user accepts
+	OtherCoin *string `form:"otherCoin,omitempty" json:"otherCoin,omitempty" xml:"otherCoin,omitempty"`
 	// A password (only exposed to user)
 	Password *string  `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
 	Skills   []string `form:"skills,omitempty" json:"skills,omitempty" xml:"skills,omitempty"`

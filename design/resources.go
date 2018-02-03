@@ -56,6 +56,19 @@ var _ = Resource("user", func() {
 		Response(BadRequest, ErrorMedia)
 	})
 
+	Action("checkUsername", func() {
+		Routing(GET("/checkUsername/:username"))
+		Params(func() {
+			Param("username", String, "username", func() {
+				MinLength(1)
+			})
+		})
+		NoSecurity()
+		Response(NoContent)
+		Response(NotFound)
+		Response(BadRequest, ErrorMedia)
+	})
+
 	Action("update", func() {
 		Routing(
 			PATCH("/:username"),

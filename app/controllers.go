@@ -331,6 +331,7 @@ func handleSwaggerOrigin(h goa.Handler) goa.Handler {
 // UserController is the controller interface for the User actions.
 type UserController interface {
 	goa.Muxer
+	CheckUsername(*CheckUsernameUserContext) error
 	Create(*CreateUserContext) error
 	Delete(*DeleteUserContext) error
 	Search(*SearchUserContext) error
@@ -342,8 +343,25 @@ type UserController interface {
 func MountUserController(service *goa.Service, ctrl UserController) {
 	initService(service)
 	var h goa.Handler
+	service.Mux.Handle("OPTIONS", "/api/user/checkUsername/:username", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/api/user", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
 	service.Mux.Handle("OPTIONS", "/api/user/:username", ctrl.MuxHandler("preflight", handleUserOrigin(cors.HandlePreflight()), nil))
+
+	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
+		// Check if there was an error loading the request
+		if err := goa.ContextError(ctx); err != nil {
+			return err
+		}
+		// Build the context
+		rctx, err := NewCheckUsernameUserContext(ctx, req, service)
+		if err != nil {
+			return err
+		}
+		return ctrl.CheckUsername(rctx)
+	}
+	h = handleUserOrigin(h)
+	service.Mux.Handle("GET", "/api/user/checkUsername/:username", ctrl.MuxHandler("checkUsername", h, nil))
+	service.LogInfo("mount", "ctrl", "User", "action", "CheckUsername", "route", "GET /api/user/checkUsername/:username")
 
 	h = func(ctx context.Context, rw http.ResponseWriter, req *http.Request) error {
 		// Check if there was an error loading the request

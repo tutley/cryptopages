@@ -52,6 +52,7 @@ type User struct {
 	Available      bool     `json:"available" bson:"available"`
 	Location       Location `json:"location" bson:"location"`
 	Coins          Coins    `json:"coins" bson:"coins"`
+	OtherCoin      string   `json:"otherCoin" bson:"otherCoin"`
 	JobCategory    string   `json:"jobCategory" bson:"jobCategory"`
 	Skills         []string `json:"skills" bson:"skills"`
 	JobDescription string   `json:"jobDescription" bson:"jobDescription"`
@@ -71,14 +72,14 @@ type Location struct {
 
 // Coins the object to hold coins
 type Coins struct {
-	BTC   bool   `json:"btc" bson:"btc"`
-	LTC   bool   `json:"ltc" bson:"ltc"`
-	BCC   bool   `json:"bcc" bson:"bcc"`
-	ETH   bool   `json:"eth" bson:"eth"`
-	NEO   bool   `json:"neo" bson:"neo"`
-	XRP   bool   `json:"xrp" bson:"xrp"`
-	XLM   bool   `json:"xlm" bson:"xml"`
-	Other string `json:"other" bson:"other"`
+	BTC   bool `json:"btc" bson:"btc"`
+	LTC   bool `json:"ltc" bson:"ltc"`
+	BCC   bool `json:"bcc" bson:"bcc"`
+	ETH   bool `json:"eth" bson:"eth"`
+	NEO   bool `json:"neo" bson:"neo"`
+	XRP   bool `json:"xrp" bson:"xrp"`
+	XLM   bool `json:"xlm" bson:"xml"`
+	Other bool `json:"other" bson:"other"`
 }
 
 // NewUser creates a new User and saves it in the database
@@ -104,6 +105,7 @@ func NewUser(u User, db *mgo.Database) (*User, error) {
 		Available:      u.Available,
 		Location:       u.Location,
 		Coins:          u.Coins,
+		OtherCoin:      u.OtherCoin,
 		JobCategory:    u.JobCategory,
 		Skills:         u.Skills,
 		JobDescription: u.JobDescription,
@@ -185,7 +187,8 @@ func (user *User) MapToCryptopagesUser() (app.CryptopagesUser, error) {
 	u.Coins.Neo = &user.Coins.NEO
 	u.Coins.Xrp = &user.Coins.XRP
 	u.Coins.Xlm = &user.Coins.XLM
-	u.Coins.Other.Name = &user.Coins.Other
+	u.Coins.Other = &user.Coins.Other
+	u.OtherCoin = &user.OtherCoin
 
 	return u, nil
 }

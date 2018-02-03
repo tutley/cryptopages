@@ -47,6 +47,27 @@
               return-object
               hint="What type of work are you interested in?"
             ></v-select>
+          <v-text-field
+            label="Job Description"
+            v-model="user.jobDescription"
+            :rules="jobDescriptionRules"
+            hint="What type of work are you looking for? Full-time, part-time, contract, big projects, small projects, etc"
+            ></v-text-field>
+          <v-text-field
+            label="Skills"
+            v-model="user.skills"
+            :rules="skillsRules"
+            hint="What skills do you bring to the table? Use spaces to separate skills."
+          ></v-text-field>
+          <span class="subheading">Coins Accepted</span><br/>
+            <v-layout row wrap>
+              <v-flex class="xs4 sm3" v-for="(item, key) in user.coins"       :key="key">
+                <v-checkbox 
+                  :label="coinLabels[key]"
+                  v-model="user.coins[key]"></v-checkbox>
+              </v-flex>
+            </v-layout>
+
           <v-btn
             @click="submit"
             :disabled="!valid"
@@ -86,7 +107,7 @@ export default {
         value: '',
         makePublic: true
       },
-      skills: [],
+      skills: '',
       jobCategory: '',
       jobDescription: '',
       coins: {
@@ -95,12 +116,21 @@ export default {
         eth: false,
         ltc: false,
         neo: false,
-        other: {
-          name: ''
-        },
+        other: false,
         xlm: false,
         xrp: false
-      }
+      },
+      otherCoin: ''
+    },
+    coinLabels: {
+      bcc: 'Bitcoin Cash',
+      btc: 'Bitcoin',
+      eth: 'Ethereum',
+      ltc: 'Litecoin',
+      neo: 'Neo',
+      other: 'Other',
+      xlm: 'Lumen',
+      xrp: 'Ripple'
     },
     jobCategories: [
       { name: 'Hardware', val: 'hardware' },
@@ -120,18 +150,28 @@ export default {
     passwordRules: [v => !!v || 'Password is required'],
     nameRules: [],
     emailRules: [],
+    skillsRules: [],
+    jobDescriptionRules: [],
     errors: [],
     valid: true
   }),
   methods: {
     checkUsername(un) {
       // check the value of this.user.username to see if the user already exists in the db
-      return false
+      HTTP.get('user/checkUsername/' + this.user.username)
+        .then(response => {
+          this.usernameAvailable = false
+        })
+        .catch(e => {
+          this.usernameAvailable = true
+        })
     },
     submit() {
+      let user = this.user
+      user.skills = this.user.skills.split(' ')
       if (this.$refs.form.validate()) {
         this.sending = true
-        HTTP.post('/user', this.user)
+        HTTP.post('/user', user)
           .then(response => {
             this.sending = false
             console.log(response.data)

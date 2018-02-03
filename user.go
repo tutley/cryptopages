@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+
 	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware/security/jwt"
@@ -20,13 +21,31 @@ func NewUserController(service *goa.Service) *UserController {
 	return &UserController{Controller: service.NewController("UserController")}
 }
 
+// CheckUsername runs the checkUsername action.
+func (c *UserController) CheckUsername(ctx *app.CheckUsernameUserContext) error {
+	// UserController_CheckUsername: start_implement
+
+	// Put your logic here
+	// grab the db and lookup the user
+	db := GetDB(ctx.Context)
+	username := ctx.Username
+	_, err := FindUserByUsername(username, db)
+	if err != nil {
+		return ctx.NotFound()
+	}
+
+	return ctx.NoContent()
+
+	// UserController_CheckUsername: end_implement
+}
+
 // Create runs the create action.
 func (c *UserController) Create(ctx *app.CreateUserContext) error {
 	// UserController_Create: start_implement
 
 	// Put your logic here
 	db := GetDB(ctx.Context)
-	// try slapping payload into the db
+	// TODO: try slapping payload directly into the db
 	p := ctx.Payload
 
 	newEmail := Email{}
@@ -48,9 +67,7 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 		newCoins.NEO = *p.Coins.Neo
 		newCoins.XRP = *p.Coins.Xrp
 		newCoins.XLM = *p.Coins.Xlm
-	}
-	if p.Coins.Other != nil {
-		newCoins.Other = *p.Coins.Other.Name
+		newCoins.Other = *p.Coins.Other
 	}
 
 	newUser := User{
@@ -60,6 +77,9 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 		Email:    newEmail,
 		Location: newLocation,
 		Coins:    newCoins,
+	}
+	if *p.Coins.Other {
+		newUser.OtherCoin = *p.OtherCoin
 	}
 	if p.Available != nil {
 		newUser.Available = *p.Available
@@ -218,10 +238,9 @@ func (c *UserController) Update(ctx *app.UpdateUserContext) error {
 		newCoins.NEO = *p.Coins.Neo
 		newCoins.XRP = *p.Coins.Xrp
 		newCoins.XLM = *p.Coins.Xlm
+		newCoins.Other = *p.Coins.Other
 	}
-	if p.Coins.Other != nil {
-		newCoins.Other = *p.Coins.Other.Name
-	}
+
 	newUser := User{
 		Name:     *p.Name,
 		Username: *p.Username,
@@ -229,6 +248,9 @@ func (c *UserController) Update(ctx *app.UpdateUserContext) error {
 		Email:    newEmail,
 		Location: newLocation,
 		Coins:    newCoins,
+	}
+	if *p.Coins.Other {
+		newUser.OtherCoin = *p.OtherCoin
 	}
 	if p.Available != nil {
 		newUser.Available = *p.Available

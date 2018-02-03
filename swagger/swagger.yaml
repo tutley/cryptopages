@@ -10,22 +10,24 @@ definitions:
         eth: false
         ltc: false
         neo: true
-        other:
-          name: Perferendis totam voluptatibus facilis magni ut.
-        xlm: true
+        other: false
+        xlm: false
         xrp: false
       email:
-        makePublic: true
+        makePublic: false
         value: me@someplace.com
-      jobCategory: legal
+      jobCategory: others
       jobDescription: I'm looking for small remote projects
       location:
-        makePublic: true
+        makePublic: false
         value: Charleston, SC, USA
       name: John Smith
+      otherCoin: Deleniti id dolor corporis.
       password: somethingreallyhardtoguess123%$!@#
       skills:
-      - Cupiditate praesentium.
+      - A quia et sit id.
+      - A quia et sit id.
+      - A quia et sit id.
       username: scubasteve
     properties:
       available:
@@ -40,9 +42,8 @@ definitions:
           eth: false
           ltc: false
           neo: true
-          other:
-            name: Perferendis totam voluptatibus facilis magni ut.
-          xlm: true
+          other: false
+          xlm: false
           xrp: false
         properties:
           bcc:
@@ -66,18 +67,12 @@ definitions:
             example: true
             type: boolean
           other:
-            description: Accepts some other coin
-            example:
-              name: Perferendis totam voluptatibus facilis magni ut.
-            properties:
-              name:
-                description: Name of the other coin accepted
-                example: Perferendis totam voluptatibus facilis magni ut.
-                type: string
-            type: object
+            description: Accepts Some Other Coin
+            example: false
+            type: boolean
           xlm:
             description: Accepts Lumen
-            example: true
+            example: false
             type: boolean
           xrp:
             description: Accepts Ripple
@@ -87,12 +82,12 @@ definitions:
       email:
         description: The user's email address
         example:
-          makePublic: true
+          makePublic: false
           value: me@someplace.com
         properties:
           makePublic:
             description: Should the email address be shown to others
-            example: true
+            example: false
             type: boolean
           value:
             description: the email address
@@ -111,7 +106,7 @@ definitions:
         - automotive
         - services
         - others
-        example: legal
+        example: others
         type: string
       jobDescription:
         example: I'm looking for small remote projects
@@ -119,12 +114,12 @@ definitions:
       location:
         description: the user's location geographically
         example:
-          makePublic: true
+          makePublic: false
           value: Charleston, SC, USA
         properties:
           makePublic:
             description: Should the location be shown to others
-            example: true
+            example: false
             type: boolean
           value:
             description: the location
@@ -137,6 +132,10 @@ definitions:
         example: John Smith
         minLength: 2
         type: string
+      otherCoin:
+        description: Name of the other coin a user accepts
+        example: Deleniti id dolor corporis.
+        type: string
       password:
         description: A password (only exposed to user)
         example: somethingreallyhardtoguess123%$!@#
@@ -144,9 +143,11 @@ definitions:
         type: string
       skills:
         example:
-        - Cupiditate praesentium.
+        - A quia et sit id.
+        - A quia et sit id.
+        - A quia et sit id.
         items:
-          example: Cupiditate praesentium.
+          example: A quia et sit id.
           type: string
         type: array
       username:
@@ -170,24 +171,23 @@ definitions:
         eth: false
         ltc: false
         neo: true
-        other:
-          name: Perferendis totam voluptatibus facilis magni ut.
-        xlm: true
+        other: false
+        xlm: false
         xrp: false
       email:
-        makePublic: true
+        makePublic: false
         value: me@someplace.com
       href: /users/scubasteve
-      jobCategory: services
+      jobCategory: automotive
       jobDescription: I'm looking for small remote projects
       location:
-        makePublic: true
+        makePublic: false
         value: Charleston, SC, USA
       name: John Smith
+      otherCoin: Expedita nobis sunt nihil cupiditate cum molestias.
       password: somethingreallyhardtoguess123%$!@#
       skills:
-      - Cupiditate praesentium.
-      - Cupiditate praesentium.
+      - A quia et sit id.
       username: scubasteve
     properties:
       available:
@@ -202,9 +202,8 @@ definitions:
           eth: false
           ltc: false
           neo: true
-          other:
-            name: Perferendis totam voluptatibus facilis magni ut.
-          xlm: true
+          other: false
+          xlm: false
           xrp: false
         properties:
           bcc:
@@ -228,18 +227,12 @@ definitions:
             example: true
             type: boolean
           other:
-            description: Accepts some other coin
-            example:
-              name: Perferendis totam voluptatibus facilis magni ut.
-            properties:
-              name:
-                description: Name of the other coin accepted
-                example: Perferendis totam voluptatibus facilis magni ut.
-                type: string
-            type: object
+            description: Accepts Some Other Coin
+            example: false
+            type: boolean
           xlm:
             description: Accepts Lumen
-            example: true
+            example: false
             type: boolean
           xrp:
             description: Accepts Ripple
@@ -249,12 +242,12 @@ definitions:
       email:
         description: The user's email address
         example:
-          makePublic: true
+          makePublic: false
           value: me@someplace.com
         properties:
           makePublic:
             description: Should the email address be shown to others
-            example: true
+            example: false
             type: boolean
           value:
             description: the email address
@@ -277,7 +270,7 @@ definitions:
         - automotive
         - services
         - others
-        example: services
+        example: automotive
         type: string
       jobDescription:
         example: I'm looking for small remote projects
@@ -285,12 +278,12 @@ definitions:
       location:
         description: the user's location geographically
         example:
-          makePublic: true
+          makePublic: false
           value: Charleston, SC, USA
         properties:
           makePublic:
             description: Should the location be shown to others
-            example: true
+            example: false
             type: boolean
           value:
             description: the location
@@ -303,6 +296,10 @@ definitions:
         example: John Smith
         minLength: 2
         type: string
+      otherCoin:
+        description: Name of the other coin a user accepts
+        example: Expedita nobis sunt nihil cupiditate cum molestias.
+        type: string
       password:
         description: A password (only exposed to user)
         example: somethingreallyhardtoguess123%$!@#
@@ -310,10 +307,9 @@ definitions:
         type: string
       skills:
         example:
-        - Cupiditate praesentium.
-        - Cupiditate praesentium.
+        - A quia et sit id.
         items:
-          example: Cupiditate praesentium.
+          example: A quia et sit id.
           type: string
         type: array
       username:
@@ -339,50 +335,23 @@ definitions:
         eth: false
         ltc: false
         neo: true
-        other:
-          name: Perferendis totam voluptatibus facilis magni ut.
-        xlm: true
+        other: false
+        xlm: false
         xrp: false
       email:
-        makePublic: true
+        makePublic: false
         value: me@someplace.com
       href: /users/scubasteve
-      jobCategory: services
+      jobCategory: automotive
       jobDescription: I'm looking for small remote projects
       location:
-        makePublic: true
+        makePublic: false
         value: Charleston, SC, USA
       name: John Smith
+      otherCoin: Expedita nobis sunt nihil cupiditate cum molestias.
       password: somethingreallyhardtoguess123%$!@#
       skills:
-      - Cupiditate praesentium.
-      - Cupiditate praesentium.
-      username: scubasteve
-    - available: true
-      coins:
-        bcc: false
-        btc: true
-        eth: false
-        ltc: false
-        neo: true
-        other:
-          name: Perferendis totam voluptatibus facilis magni ut.
-        xlm: true
-        xrp: false
-      email:
-        makePublic: true
-        value: me@someplace.com
-      href: /users/scubasteve
-      jobCategory: services
-      jobDescription: I'm looking for small remote projects
-      location:
-        makePublic: true
-        value: Charleston, SC, USA
-      name: John Smith
-      password: somethingreallyhardtoguess123%$!@#
-      skills:
-      - Cupiditate praesentium.
-      - Cupiditate praesentium.
+      - A quia et sit id.
       username: scubasteve
     items:
       $ref: '#/definitions/CryptopagesUser'
@@ -398,22 +367,24 @@ definitions:
         eth: false
         ltc: false
         neo: true
-        other:
-          name: Perferendis totam voluptatibus facilis magni ut.
-        xlm: true
+        other: false
+        xlm: false
         xrp: false
       email:
-        makePublic: true
+        makePublic: false
         value: me@someplace.com
-      jobCategory: legal
+      jobCategory: others
       jobDescription: I'm looking for small remote projects
       location:
-        makePublic: true
+        makePublic: false
         value: Charleston, SC, USA
       name: John Smith
+      otherCoin: Deleniti id dolor corporis.
       password: somethingreallyhardtoguess123%$!@#
       skills:
-      - Cupiditate praesentium.
+      - A quia et sit id.
+      - A quia et sit id.
+      - A quia et sit id.
       username: scubasteve
     properties:
       available:
@@ -428,9 +399,8 @@ definitions:
           eth: false
           ltc: false
           neo: true
-          other:
-            name: Perferendis totam voluptatibus facilis magni ut.
-          xlm: true
+          other: false
+          xlm: false
           xrp: false
         properties:
           bcc:
@@ -454,18 +424,12 @@ definitions:
             example: true
             type: boolean
           other:
-            description: Accepts some other coin
-            example:
-              name: Perferendis totam voluptatibus facilis magni ut.
-            properties:
-              name:
-                description: Name of the other coin accepted
-                example: Perferendis totam voluptatibus facilis magni ut.
-                type: string
-            type: object
+            description: Accepts Some Other Coin
+            example: false
+            type: boolean
           xlm:
             description: Accepts Lumen
-            example: true
+            example: false
             type: boolean
           xrp:
             description: Accepts Ripple
@@ -475,12 +439,12 @@ definitions:
       email:
         description: The user's email address
         example:
-          makePublic: true
+          makePublic: false
           value: me@someplace.com
         properties:
           makePublic:
             description: Should the email address be shown to others
-            example: true
+            example: false
             type: boolean
           value:
             description: the email address
@@ -499,7 +463,7 @@ definitions:
         - automotive
         - services
         - others
-        example: legal
+        example: others
         type: string
       jobDescription:
         example: I'm looking for small remote projects
@@ -507,12 +471,12 @@ definitions:
       location:
         description: the user's location geographically
         example:
-          makePublic: true
+          makePublic: false
           value: Charleston, SC, USA
         properties:
           makePublic:
             description: Should the location be shown to others
-            example: true
+            example: false
             type: boolean
           value:
             description: the location
@@ -525,6 +489,10 @@ definitions:
         example: John Smith
         minLength: 2
         type: string
+      otherCoin:
+        description: Name of the other coin a user accepts
+        example: Deleniti id dolor corporis.
+        type: string
       password:
         description: A password (only exposed to user)
         example: somethingreallyhardtoguess123%$!@#
@@ -532,9 +500,11 @@ definitions:
         type: string
       skills:
         example:
-        - Cupiditate praesentium.
+        - A quia et sit id.
+        - A quia et sit id.
+        - A quia et sit id.
         items:
-          example: Cupiditate praesentium.
+          example: A quia et sit id.
           type: string
         type: array
       username:
@@ -834,6 +804,32 @@ paths:
       - jwt:
         - api:access
       summary: update user
+      tags:
+      - user
+  /api/user/checkUsername/{username}:
+    get:
+      operationId: user#checkUsername
+      parameters:
+      - description: username
+        in: path
+        minLength: 1
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/vnd.goa.error
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/error'
+        "404":
+          description: Not Found
+      schemes:
+      - http
+      summary: checkUsername user
       tags:
       - user
   /swagger.json:

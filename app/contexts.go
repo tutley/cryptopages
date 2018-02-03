@@ -78,6 +78,54 @@ func (ctx *SigninJWTContext) Unauthorized() error {
 	return nil
 }
 
+// CheckUsernameUserContext provides the user checkUsername action context.
+type CheckUsernameUserContext struct {
+	context.Context
+	*goa.ResponseData
+	*goa.RequestData
+	Username string
+}
+
+// NewCheckUsernameUserContext parses the incoming request URL and body, performs validations and creates the
+// context used by the user controller checkUsername action.
+func NewCheckUsernameUserContext(ctx context.Context, r *http.Request, service *goa.Service) (*CheckUsernameUserContext, error) {
+	var err error
+	resp := goa.ContextResponse(ctx)
+	resp.Service = service
+	req := goa.ContextRequest(ctx)
+	req.Request = r
+	rctx := CheckUsernameUserContext{Context: ctx, ResponseData: resp, RequestData: req}
+	paramUsername := req.Params["username"]
+	if len(paramUsername) > 0 {
+		rawUsername := paramUsername[0]
+		rctx.Username = rawUsername
+		if utf8.RuneCountInString(rctx.Username) < 1 {
+			err = goa.MergeErrors(err, goa.InvalidLengthError(`username`, rctx.Username, utf8.RuneCountInString(rctx.Username), 1, true))
+		}
+	}
+	return &rctx, err
+}
+
+// NoContent sends a HTTP response with status code 204.
+func (ctx *CheckUsernameUserContext) NoContent() error {
+	ctx.ResponseData.WriteHeader(204)
+	return nil
+}
+
+// BadRequest sends a HTTP response with status code 400.
+func (ctx *CheckUsernameUserContext) BadRequest(r error) error {
+	if ctx.ResponseData.Header().Get("Content-Type") == "" {
+		ctx.ResponseData.Header().Set("Content-Type", "application/vnd.goa.error")
+	}
+	return ctx.ResponseData.Service.Send(ctx.Context, 400, r)
+}
+
+// NotFound sends a HTTP response with status code 404.
+func (ctx *CheckUsernameUserContext) NotFound() error {
+	ctx.ResponseData.WriteHeader(404)
+	return nil
+}
+
 // CreateUserContext provides the user create action context.
 type CreateUserContext struct {
 	context.Context
@@ -114,11 +162,8 @@ type createUserPayload struct {
 		Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 		// Accepts Neo
 		Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-		// Accepts some other coin
-		Other *struct {
-			// Name of the other coin accepted
-			Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-		} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+		// Accepts Some Other Coin
+		Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 		// Accepts Lumen
 		Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 		// Accepts Ripple
@@ -142,6 +187,8 @@ type createUserPayload struct {
 	} `form:"location,omitempty" json:"location,omitempty" xml:"location,omitempty"`
 	// The user's full name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Name of the other coin a user accepts
+	OtherCoin *string `form:"otherCoin,omitempty" json:"otherCoin,omitempty" xml:"otherCoin,omitempty"`
 	// A password (only exposed to user)
 	Password *string  `form:"password,omitempty" json:"password,omitempty" xml:"password,omitempty"`
 	Skills   []string `form:"skills,omitempty" json:"skills,omitempty" xml:"skills,omitempty"`
@@ -220,11 +267,8 @@ func (payload *createUserPayload) Publicize() *CreateUserPayload {
 			Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 			// Accepts Neo
 			Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-			// Accepts some other coin
-			Other *struct {
-				// Name of the other coin accepted
-				Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-			} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+			// Accepts Some Other Coin
+			Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 			// Accepts Lumen
 			Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 			// Accepts Ripple
@@ -246,13 +290,7 @@ func (payload *createUserPayload) Publicize() *CreateUserPayload {
 			pub.Coins.Neo = payload.Coins.Neo
 		}
 		if payload.Coins.Other != nil {
-			pub.Coins.Other = &struct {
-				// Name of the other coin accepted
-				Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-			}{}
-			if payload.Coins.Other.Name != nil {
-				pub.Coins.Other.Name = payload.Coins.Other.Name
-			}
+			pub.Coins.Other = payload.Coins.Other
 		}
 		if payload.Coins.Xlm != nil {
 			pub.Coins.Xlm = payload.Coins.Xlm
@@ -298,6 +336,9 @@ func (payload *createUserPayload) Publicize() *CreateUserPayload {
 	if payload.Name != nil {
 		pub.Name = *payload.Name
 	}
+	if payload.OtherCoin != nil {
+		pub.OtherCoin = payload.OtherCoin
+	}
 	if payload.Password != nil {
 		pub.Password = *payload.Password
 	}
@@ -326,11 +367,8 @@ type CreateUserPayload struct {
 		Ltc *bool `form:"ltc,omitempty" json:"ltc,omitempty" xml:"ltc,omitempty"`
 		// Accepts Neo
 		Neo *bool `form:"neo,omitempty" json:"neo,omitempty" xml:"neo,omitempty"`
-		// Accepts some other coin
-		Other *struct {
-			// Name of the other coin accepted
-			Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-		} `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
+		// Accepts Some Other Coin
+		Other *bool `form:"other,omitempty" json:"other,omitempty" xml:"other,omitempty"`
 		// Accepts Lumen
 		Xlm *bool `form:"xlm,omitempty" json:"xlm,omitempty" xml:"xlm,omitempty"`
 		// Accepts Ripple
@@ -354,6 +392,8 @@ type CreateUserPayload struct {
 	} `form:"location,omitempty" json:"location,omitempty" xml:"location,omitempty"`
 	// The user's full name
 	Name string `form:"name" json:"name" xml:"name"`
+	// Name of the other coin a user accepts
+	OtherCoin *string `form:"otherCoin,omitempty" json:"otherCoin,omitempty" xml:"otherCoin,omitempty"`
 	// A password (only exposed to user)
 	Password string   `form:"password" json:"password" xml:"password"`
 	Skills   []string `form:"skills,omitempty" json:"skills,omitempty" xml:"skills,omitempty"`

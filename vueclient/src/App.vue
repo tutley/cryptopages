@@ -46,8 +46,8 @@
         <div>&nbsp;</div>
         <router-view></router-view>
          <v-footer class="pa-3">
-          <v-spacer></v-spacer>
           <div><a href="https://tomutley.com/">Tom Utley</a></div>
+          <v-spacer></v-spacer>
         </v-footer>
       </v-content>
   </v-app>

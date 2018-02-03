@@ -48,11 +48,9 @@ var UserPayload = Type("UserPayload", func() {
 		Attribute("neo", Boolean, "Accepts Neo")
 		Attribute("xrp", Boolean, "Accepts Ripple")
 		Attribute("xlm", Boolean, "Accepts Lumen")
-		Attribute("other", func() {
-			Description("Accepts some other coin")
-			Attribute("name", String, "Name of the other coin accepted")
-		})
+		Attribute("other", Boolean, "Accepts Some Other Coin")
 	})
+	Attribute("otherCoin", String, "Name of the other coin a user accepts")
 	Attribute("jobCategory", func() {
 		Enum("hardware", "software", "writing", "legal", "labor", "automotive", "services", "others")
 	})
