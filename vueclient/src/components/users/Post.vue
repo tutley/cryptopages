@@ -9,11 +9,12 @@
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-text-field
             label="Username"
+            ref="username"
             v-model="user.username"
             :rules="usernameRules"
             :counter="60"
-            hint="This is your identifier on this site. It must be unique, and others will see it."
             @blur="checkUsername"
+            hint="This is your identifier on this site. It must be unique, and others will see it."
             required
           ></v-text-field>
           <v-text-field
@@ -91,79 +92,85 @@
 import { HTTP } from '../../api'
 
 export default {
-  data: () => ({
-    sending: false,
-    usernameAvailable: true,
-    user: {
-      username: '',
-      password: '',
-      available: true,
-      name: '',
-      email: {
-        value: '',
-        makePublic: true
+  data() {
+    return {
+      sending: false,
+      usernameAvailable: true,
+      user: {
+        username: '',
+        password: '',
+        available: true,
+        name: '',
+        email: {
+          value: '',
+          makePublic: true
+        },
+        location: {
+          value: '',
+          makePublic: true
+        },
+        skills: '',
+        jobCategory: '',
+        jobDescription: '',
+        coins: {
+          bcc: false,
+          btc: false,
+          eth: false,
+          ltc: false,
+          neo: false,
+          other: false,
+          xlm: false,
+          xrp: false
+        },
+        otherCoin: ''
       },
-      location: {
-        value: '',
-        makePublic: true
+      coinLabels: {
+        bcc: 'Bitcoin Cash',
+        btc: 'Bitcoin',
+        eth: 'Ethereum',
+        ltc: 'Litecoin',
+        neo: 'Neo',
+        other: 'Other',
+        xlm: 'Lumen',
+        xrp: 'Ripple'
       },
-      skills: '',
-      jobCategory: '',
-      jobDescription: '',
-      coins: {
-        bcc: false,
-        btc: false,
-        eth: false,
-        ltc: false,
-        neo: false,
-        other: false,
-        xlm: false,
-        xrp: false
-      },
-      otherCoin: ''
-    },
-    coinLabels: {
-      bcc: 'Bitcoin Cash',
-      btc: 'Bitcoin',
-      eth: 'Ethereum',
-      ltc: 'Litecoin',
-      neo: 'Neo',
-      other: 'Other',
-      xlm: 'Lumen',
-      xrp: 'Ripple'
-    },
-    jobCategories: [
-      { name: 'Hardware', val: 'hardware' },
-      { name: 'Software', val: 'software' },
-      { name: 'Writing', val: 'writing' },
-      { name: 'Legal', val: 'legal' },
-      { name: 'Labor', val: 'labor' },
-      { name: 'Automotive', val: 'automotive' },
-      { name: 'Services', val: 'services' },
-      { name: 'Others', val: 'others' }
-    ],
-    usernameRules: [
-      v => !!v || 'Username is required',
-      v => (v && v.length <= 60) || 'Username must be less than 60 characters',
-      v => this.usernameAvailable || 'Username is not available, sorry'
-    ],
-    passwordRules: [v => !!v || 'Password is required'],
-    nameRules: [],
-    emailRules: [],
-    skillsRules: [],
-    jobDescriptionRules: [],
-    errors: [],
-    valid: true
-  }),
+      jobCategories: [
+        { name: 'Hardware', val: 'hardware' },
+        { name: 'Software', val: 'software' },
+        { name: 'Writing', val: 'writing' },
+        { name: 'Legal', val: 'legal' },
+        { name: 'Labor', val: 'labor' },
+        { name: 'Automotive', val: 'automotive' },
+        { name: 'Services', val: 'services' },
+        { name: 'Others', val: 'others' }
+      ],
+      usernameRules: [
+        v => !!v || 'Username is required!',
+        v => (v && v.length <= 60) || 'Username must be less than 60 characters',
+        v => this.usernameAvailable || 'Sorry, that username is taken'
+      ],
+      passwordRules: [v => !!v || 'Password is required'],
+      nameRules: [],
+      emailRules: [
+        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+      ],
+      skillsRules: [],
+      jobDescriptionRules: [],
+      errors: [],
+      valid: true
+    }
+  },
   methods: {
     checkUsername(un) {
       // check the value of this.user.username to see if the user already exists in the db
       HTTP.get('user/checkUsername/' + this.user.username)
         .then(response => {
           this.usernameAvailable = false
+          this.$refs.username.validate()
         })
         .catch(e => {
           this.usernameAvailable = true
+          this.$refs.username.validate()
         })
     },
     submit() {
