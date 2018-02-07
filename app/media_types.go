@@ -92,30 +92,8 @@ func (mt *CryptopagesUser) Validate() (err error) {
 	if mt.JobCategory == "" {
 		err = goa.MergeErrors(err, goa.MissingAttributeError(`response`, "jobCategory"))
 	}
-	if mt.Email != nil {
-		if mt.Email.Value != nil {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, *mt.Email.Value); err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFormatError(`response.email.value`, *mt.Email.Value, goa.FormatEmail, err2))
-			}
-		}
-		if mt.Email.Value != nil {
-			if utf8.RuneCountInString(*mt.Email.Value) < 5 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`response.email.value`, *mt.Email.Value, utf8.RuneCountInString(*mt.Email.Value), 5, true))
-			}
-		}
-	}
 	if !(mt.JobCategory == "hardware" || mt.JobCategory == "software" || mt.JobCategory == "writing" || mt.JobCategory == "legal" || mt.JobCategory == "labor" || mt.JobCategory == "automotive" || mt.JobCategory == "services" || mt.JobCategory == "others") {
 		err = goa.MergeErrors(err, goa.InvalidEnumValueError(`response.jobCategory`, mt.JobCategory, []interface{}{"hardware", "software", "writing", "legal", "labor", "automotive", "services", "others"}))
-	}
-	if mt.Location != nil {
-		if mt.Location.Value != nil {
-			if utf8.RuneCountInString(*mt.Location.Value) < 2 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`response.location.value`, *mt.Location.Value, utf8.RuneCountInString(*mt.Location.Value), 2, true))
-			}
-		}
-	}
-	if utf8.RuneCountInString(mt.Name) < 2 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 2, true))
 	}
 	if mt.Password != nil {
 		if utf8.RuneCountInString(*mt.Password) < 8 {
@@ -157,9 +135,6 @@ func (mt *CryptopagesUserTiny) Validate() (err error) {
 	}
 	if !(mt.JobCategory == "hardware" || mt.JobCategory == "software" || mt.JobCategory == "writing" || mt.JobCategory == "legal" || mt.JobCategory == "labor" || mt.JobCategory == "automotive" || mt.JobCategory == "services" || mt.JobCategory == "others") {
 		err = goa.MergeErrors(err, goa.InvalidEnumValueError(`response.jobCategory`, mt.JobCategory, []interface{}{"hardware", "software", "writing", "legal", "labor", "automotive", "services", "others"}))
-	}
-	if utf8.RuneCountInString(mt.Name) < 2 {
-		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.name`, mt.Name, utf8.RuneCountInString(mt.Name), 2, true))
 	}
 	if utf8.RuneCountInString(mt.Username) < 2 {
 		err = goa.MergeErrors(err, goa.InvalidLengthError(`response.username`, mt.Username, utf8.RuneCountInString(mt.Username), 2, true))

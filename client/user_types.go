@@ -68,33 +68,9 @@ type userPayload struct {
 
 // Validate validates the userPayload type instance.
 func (ut *userPayload) Validate() (err error) {
-	if ut.Email != nil {
-		if ut.Email.Value != nil {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, *ut.Email.Value); err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFormatError(`request.email.value`, *ut.Email.Value, goa.FormatEmail, err2))
-			}
-		}
-		if ut.Email.Value != nil {
-			if utf8.RuneCountInString(*ut.Email.Value) < 5 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`request.email.value`, *ut.Email.Value, utf8.RuneCountInString(*ut.Email.Value), 5, true))
-			}
-		}
-	}
 	if ut.JobCategory != nil {
 		if !(*ut.JobCategory == "hardware" || *ut.JobCategory == "software" || *ut.JobCategory == "writing" || *ut.JobCategory == "legal" || *ut.JobCategory == "labor" || *ut.JobCategory == "automotive" || *ut.JobCategory == "services" || *ut.JobCategory == "others") {
 			err = goa.MergeErrors(err, goa.InvalidEnumValueError(`request.jobCategory`, *ut.JobCategory, []interface{}{"hardware", "software", "writing", "legal", "labor", "automotive", "services", "others"}))
-		}
-	}
-	if ut.Location != nil {
-		if ut.Location.Value != nil {
-			if utf8.RuneCountInString(*ut.Location.Value) < 2 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`request.location.value`, *ut.Location.Value, utf8.RuneCountInString(*ut.Location.Value), 2, true))
-			}
-		}
-	}
-	if ut.Name != nil {
-		if utf8.RuneCountInString(*ut.Name) < 2 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`request.name`, *ut.Name, utf8.RuneCountInString(*ut.Name), 2, true))
 		}
 	}
 	if ut.Password != nil {
@@ -264,33 +240,9 @@ type UserPayload struct {
 
 // Validate validates the UserPayload type instance.
 func (ut *UserPayload) Validate() (err error) {
-	if ut.Email != nil {
-		if ut.Email.Value != nil {
-			if err2 := goa.ValidateFormat(goa.FormatEmail, *ut.Email.Value); err2 != nil {
-				err = goa.MergeErrors(err, goa.InvalidFormatError(`type.email.value`, *ut.Email.Value, goa.FormatEmail, err2))
-			}
-		}
-		if ut.Email.Value != nil {
-			if utf8.RuneCountInString(*ut.Email.Value) < 5 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`type.email.value`, *ut.Email.Value, utf8.RuneCountInString(*ut.Email.Value), 5, true))
-			}
-		}
-	}
 	if ut.JobCategory != nil {
 		if !(*ut.JobCategory == "hardware" || *ut.JobCategory == "software" || *ut.JobCategory == "writing" || *ut.JobCategory == "legal" || *ut.JobCategory == "labor" || *ut.JobCategory == "automotive" || *ut.JobCategory == "services" || *ut.JobCategory == "others") {
 			err = goa.MergeErrors(err, goa.InvalidEnumValueError(`type.jobCategory`, *ut.JobCategory, []interface{}{"hardware", "software", "writing", "legal", "labor", "automotive", "services", "others"}))
-		}
-	}
-	if ut.Location != nil {
-		if ut.Location.Value != nil {
-			if utf8.RuneCountInString(*ut.Location.Value) < 2 {
-				err = goa.MergeErrors(err, goa.InvalidLengthError(`type.location.value`, *ut.Location.Value, utf8.RuneCountInString(*ut.Location.Value), 2, true))
-			}
-		}
-	}
-	if ut.Name != nil {
-		if utf8.RuneCountInString(*ut.Name) < 2 {
-			err = goa.MergeErrors(err, goa.InvalidLengthError(`type.name`, *ut.Name, utf8.RuneCountInString(*ut.Name), 2, true))
 		}
 	}
 	if ut.Password != nil {

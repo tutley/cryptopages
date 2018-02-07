@@ -3,9 +3,10 @@
     <v-layout row>
       <v-flex xs12 sm8 offset-sm2>
         <p class="headline">Sign In</p>
-        <v-form v-model="valid" ref="form" lazy-validation>
+        <v-form  v-model="valid" ref="form" lazy-validation>
           <v-text-field
             label="Username"
+            autofocus
             v-model="username"
             :rules="usernameRules"
             required
@@ -14,6 +15,7 @@
             label="Password"
             v-model="password"
             :rules="passwordRules"
+            @keyup.enter="submit"
             required
             type="password"
           ></v-text-field>
@@ -64,10 +66,11 @@ export default {
         )
           .then(response => {
             this.sending = false
-            console.log(response)
             let token = response.headers.authorization.toString().replace('Bearer ', '')
             localStorage.setItem('token', token)
+            HTTP.defaults.headers['Authorization'] = 'Bearer ' + token
             this.$store.dispatch('setIsLoggedIn', true)
+            this.$store.dispatch('loadProfile', this.username)
             this.$router.push({ name: 'Hello' })
           })
           .catch(e => {

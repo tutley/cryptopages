@@ -20,11 +20,11 @@ importScripts('workbox-sw.prod.v2.1.2.js');
 const fileManifest = [
   {
     "url": "/index.html",
-    "revision": "590f87208b871f22299ffd5a08a6b53b"
+    "revision": "b4efe1102ec8ba28baa040f64c9de3f3"
   },
   {
-    "url": "/static/css/app.8835f60cdd9acf56413138e83668f965.css",
-    "revision": "0197dee271e2a8b3360a658e0ee35335"
+    "url": "/static/css/app.6b9ac4b1024444de999ebe6312e5d23f.css",
+    "revision": "d9a754d031ca3d6ff0ae310df9860231"
   },
   {
     "url": "/static/img/icons-old/android-chrome-192x192.png",
@@ -83,12 +83,12 @@ const fileManifest = [
     "revision": "56e6ed072e8737c918a560e713dfcf8d"
   },
   {
-    "url": "/static/js/app.cfd1fd6ef06a919cd2e4.js",
-    "revision": "02ccffd0efd0cf70946f1ded713b78b4"
+    "url": "/static/js/app.a968f05f5a53fef26151.js",
+    "revision": "59b12515b4653c52b2ee2a91b5855855"
   },
   {
-    "url": "/static/js/manifest.c08cb0f0f42822ea43a9.js",
-    "revision": "4efdd96ae544f6f47714165af64174b2"
+    "url": "/static/js/manifest.3bb97557d1c3691a8233.js",
+    "revision": "4159c87bf4971ffaed3e2a2f4c90b5b4"
   },
   {
     "url": "/static/js/vendor.b11aff4750c37e9b7158.js",

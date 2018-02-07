@@ -9,6 +9,8 @@ import (
 	"github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/imdario/mergo"
 	"github.com/tutley/cryptopages/app"
+	"golang.org/x/crypto/bcrypt"
+	"gopkg.in/mgo.v2/bson"
 )
 
 // UserController implements the user resource.
@@ -48,53 +50,17 @@ func (c *UserController) Create(ctx *app.CreateUserContext) error {
 	// TODO: try slapping payload directly into the db
 	p := ctx.Payload
 
-	newEmail := Email{}
-	if p.Email != nil {
-		newEmail.Value = *p.Email.Value
-		newEmail.MakePublic = *p.Email.MakePublic
+	//verify the username isn't already being used
+	user, _ := FindUserByUsername(p.Username, db)
+	if user != nil {
+		return ctx.BadRequest(errors.New("user: The user already exists"))
 	}
-	newLocation := Location{}
-	if p.Location != nil {
-		newLocation.Value = *p.Location.Value
-		newLocation.MakePublic = *p.Location.MakePublic
+	passHash, err := bcrypt.GenerateFromPassword([]byte(p.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return ctx.BadRequest(fmt.Errorf("user: %+v", err))
 	}
-	newCoins := Coins{}
-	if p.Coins != nil {
-		newCoins.BTC = *p.Coins.Btc
-		newCoins.LTC = *p.Coins.Ltc
-		newCoins.BCC = *p.Coins.Bcc
-		newCoins.ETH = *p.Coins.Eth
-		newCoins.NEO = *p.Coins.Neo
-		newCoins.XRP = *p.Coins.Xrp
-		newCoins.XLM = *p.Coins.Xlm
-		newCoins.Other = *p.Coins.Other
-	}
-
-	newUser := User{
-		Name:     p.Name,
-		Username: p.Username,
-		Password: p.Password,
-		Email:    newEmail,
-		Location: newLocation,
-		Coins:    newCoins,
-	}
-	if *p.Coins.Other {
-		newUser.OtherCoin = *p.OtherCoin
-	}
-	if p.Available != nil {
-		newUser.Available = *p.Available
-	}
-	if p.JobCategory != nil {
-		newUser.JobCategory = *p.JobCategory
-	}
-	if len(p.Skills) > 0 {
-		newUser.Skills = p.Skills
-	}
-	if p.JobDescription != nil {
-		newUser.JobDescription = *p.JobDescription
-	}
-
-	_, err := NewUser(newUser, db)
+	p.Password = string(passHash)
+	err = db.C("users").Insert(p)
 	if err != nil {
 		// TODO: send internal server error?
 		return ctx.BadRequest(err)
@@ -131,7 +97,7 @@ func (c *UserController) Delete(ctx *app.DeleteUserContext) error {
 	if err != nil {
 		return ctx.NotFound()
 	}
-	err = u.Delete(db)
+	err = db.C("users").Remove(bson.M{"username": u.Username})
 	if err != nil {
 		return ctx.BadRequest(err)
 	}
@@ -150,17 +116,21 @@ func (c *UserController) Search(ctx *app.SearchUserContext) error {
 	// formulate the search query objects
 
 	// do the thing
-	users, err := SearchUsers(db)
+
+	users := []*app.CryptopagesUser{}
+	err := db.C("users").Find(bson.M{}).All(&users)
 	if err != nil {
 		return ctx.NotFound()
 	}
-	cc := []*app.CryptopagesUser{}
-	for _, user := range *users {
-		u, _ := user.MapToCryptopagesUser()
-		cc = append(cc, &u)
-	}
-	res := cc
-	return ctx.OK(res)
+	return ctx.OK(users)
+
+	// cc := []*app.CryptopagesUser{}
+	// for _, user := range *users {
+	// 	u, _ := user.MapToCryptopagesUser()
+	// 	cc = append(cc, &u)
+	// }
+	// res := cc
+	// return ctx.OK(res)
 
 	// UserController_Search: end_implement
 }
@@ -177,12 +147,7 @@ func (c *UserController) Show(ctx *app.ShowUserContext) error {
 	if err != nil {
 		return ctx.NotFound()
 	}
-	cu, err := u.MapToCryptopagesUser()
-	if err != nil {
-		return ctx.BadRequest(err)
-	}
-	res := &cu
-	return ctx.OK(res)
+	return ctx.OK(u)
 
 	// UserController_Show: end_implement
 }
@@ -216,56 +181,10 @@ func (c *UserController) Update(ctx *app.UpdateUserContext) error {
 	}
 
 	// Make the changes
-	// TODO: Refactor. This is painful, I must be missing something
 	p := ctx.Payload
 
-	newEmail := Email{}
-	if p.Email != nil {
-		newEmail.Value = *p.Email.Value
-		newEmail.MakePublic = *p.Email.MakePublic
-	}
-	newLocation := Location{}
-	if p.Location != nil {
-		newLocation.Value = *p.Location.Value
-		newLocation.MakePublic = *p.Location.MakePublic
-	}
-	newCoins := Coins{}
-	if p.Coins != nil {
-		newCoins.BTC = *p.Coins.Btc
-		newCoins.LTC = *p.Coins.Ltc
-		newCoins.BCC = *p.Coins.Bcc
-		newCoins.ETH = *p.Coins.Eth
-		newCoins.NEO = *p.Coins.Neo
-		newCoins.XRP = *p.Coins.Xrp
-		newCoins.XLM = *p.Coins.Xlm
-		newCoins.Other = *p.Coins.Other
-	}
-
-	newUser := User{
-		Name:     *p.Name,
-		Username: *p.Username,
-		Password: *p.Password,
-		Email:    newEmail,
-		Location: newLocation,
-		Coins:    newCoins,
-	}
-	if *p.Coins.Other {
-		newUser.OtherCoin = *p.OtherCoin
-	}
-	if p.Available != nil {
-		newUser.Available = *p.Available
-	}
-	if p.JobCategory != nil {
-		newUser.JobCategory = *p.JobCategory
-	}
-	if len(p.Skills) > 0 {
-		newUser.Skills = p.Skills
-	}
-	if p.JobDescription != nil {
-		newUser.JobDescription = *p.JobDescription
-	}
-	mergo.Merge(&u, newUser)
-	err = u.Save(db)
+	mergo.Merge(&u, p, mergo.WithOverride)
+	err = db.C("users").Update(bson.M{"username": u.Username}, u)
 	if err != nil {
 		return ctx.BadRequest(err)
 	}

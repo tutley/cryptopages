@@ -9,7 +9,6 @@ import (
 // It is also the base type for the user media type used to render users.
 var UserPayload = Type("UserPayload", func() {
 	Attribute("name", String, "The user's full name", func() {
-		MinLength(2)
 		Example("John Smith")
 	})
 	Attribute("username", String, "The unique username for this person", func() {
@@ -24,8 +23,8 @@ var UserPayload = Type("UserPayload", func() {
 	Attribute("email", func() {
 		Description("The user's email address")
 		Attribute("value", String, "the email address", func() {
-			Format("email")
-			MinLength(5)
+			// TODO: Figure out how to check for "" OR Format("email")
+			//Format("email")
 			Example("me@someplace.com")
 		})
 		Attribute("makePublic", Boolean, "Should the email address be shown to others")
@@ -34,7 +33,6 @@ var UserPayload = Type("UserPayload", func() {
 	Attribute("location", func() {
 		Description("the user's location geographically")
 		Attribute("value", String, "the location", func() {
-			MinLength(2)
 			Example("Charleston, SC, USA")
 		})
 		Attribute("makePublic", Boolean, "Should the location be shown to others")

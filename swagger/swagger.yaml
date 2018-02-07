@@ -92,8 +92,6 @@ definitions:
           value:
             description: the email address
             example: me@someplace.com
-            format: email
-            minLength: 5
             type: string
         type: object
       jobCategory:
@@ -124,13 +122,11 @@ definitions:
           value:
             description: the location
             example: Charleston, SC, USA
-            minLength: 2
             type: string
         type: object
       name:
         description: The user's full name
         example: John Smith
-        minLength: 2
         type: string
       otherCoin:
         description: Name of the other coin a user accepts
@@ -252,8 +248,6 @@ definitions:
           value:
             description: the email address
             example: me@someplace.com
-            format: email
-            minLength: 5
             type: string
         type: object
       href:
@@ -288,13 +282,11 @@ definitions:
           value:
             description: the location
             example: Charleston, SC, USA
-            minLength: 2
             type: string
         type: object
       name:
         description: The user's full name
         example: John Smith
-        minLength: 2
         type: string
       otherCoin:
         description: Name of the other coin a user accepts
@@ -449,8 +441,6 @@ definitions:
           value:
             description: the email address
             example: me@someplace.com
-            format: email
-            minLength: 5
             type: string
         type: object
       jobCategory:
@@ -481,13 +471,11 @@ definitions:
           value:
             description: the location
             example: Charleston, SC, USA
-            minLength: 2
             type: string
         type: object
       name:
         description: The user's full name
         example: John Smith
-        minLength: 2
         type: string
       otherCoin:
         description: Name of the other coin a user accepts

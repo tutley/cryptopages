@@ -9,6 +9,7 @@
         <v-form v-model="valid" ref="form" lazy-validation>
           <v-text-field
             label="Username"
+            autofocus
             ref="username"
             v-model="user.username"
             :rules="usernameRules"
@@ -27,7 +28,7 @@
           <v-checkbox label="Available? (included in search results)" v-model="user.available"></v-checkbox>
           <v-text-field
             label="Name"
-            v-model="user.name.value"
+            v-model="user.name"
             :rules="nameRules"
             hint="Put your name here."
           ></v-text-field>
@@ -35,6 +36,7 @@
             label="Email"
             v-model="user.email.value"
             :rules="emailRules"
+            validate-on-blur
             hint="Let others know the best email to reach you with. You have the option to hide this."
           ></v-text-field>
           <v-checkbox label="Display Email?" v-model="user.email.makePublic"></v-checkbox>
@@ -45,7 +47,6 @@
               single-line
               item-text="name"
               item-value="val"
-              return-object
               hint="What type of work are you interested in?"
             ></v-select>
           <v-text-field
@@ -68,7 +69,13 @@
                   v-model="user.coins[key]"></v-checkbox>
               </v-flex>
             </v-layout>
-
+          <v-text-field
+          v-show="user.coins.other"
+            label="Other Coin Name"
+            v-model="user.otherCoin"
+            :rules="otherCoinRules"
+            hint="What is the name of the other crypto currency you accept?"
+          ></v-text-field>
           <v-btn
             @click="submit"
             :disabled="!valid"
@@ -103,14 +110,14 @@ export default {
         name: '',
         email: {
           value: '',
-          makePublic: true
+          makePublic: false
         },
         location: {
           value: '',
-          makePublic: true
+          makePublic: false
         },
         skills: '',
-        jobCategory: '',
+        jobCategory: 'others',
         jobDescription: '',
         coins: {
           bcc: false,
@@ -152,7 +159,10 @@ export default {
       passwordRules: [v => !!v || 'Password is required'],
       nameRules: [],
       emailRules: [
-        v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+        v =>
+          v.length === 0 ||
+          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+          'E-mail must be valid'
       ],
       skillsRules: [],
       jobDescriptionRules: [],
@@ -175,17 +185,17 @@ export default {
     },
     submit() {
       let user = this.user
-      user.skills = this.user.skills.split(' ')
+      user.skills = user.skills.split(' ')
       if (this.$refs.form.validate()) {
         this.sending = true
         HTTP.post('/user', user)
           .then(response => {
             this.sending = false
-            console.log(response.data)
-            this.$router.push({ name: 'User Detail', params: { id: response.data.username } })
+            this.$router.push({ name: 'Signin' })
           })
           .catch(e => {
             this.sending = false
+            this.user.skills = ''
             this.errors.push(e)
           })
       }

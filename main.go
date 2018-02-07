@@ -13,6 +13,7 @@ import (
 	"github.com/goadesign/goa/middleware"
 	"github.com/goadesign/goa/middleware/security/jwt"
 	"github.com/tutley/cryptopages/app"
+	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -104,14 +105,13 @@ func NewBasicAuthMiddleware() goa.Middleware {
 				goa.LogInfo(ctx, "failed basic auth")
 				return ErrUnauthorized("missing auth")
 			}
-			var lu User
+			var lu app.CryptopagesUser
 			db := GetDB(ctx)
 			err := db.C("users").Find(bson.M{"username": user}).One(&lu)
 			if err != nil {
 				return ErrUnauthorized("user not found")
 			}
-
-			err = lu.CheckPassword(pass)
+			err = bcrypt.CompareHashAndPassword([]byte(*lu.Password), []byte(pass))
 			if err != nil {
 				return ErrUnauthorized("incorrect password")
 			}
