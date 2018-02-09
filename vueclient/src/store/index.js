@@ -4,7 +4,27 @@ import { HTTP } from '../api'
 
 const state = {
   isLoggedIn: false,
-  user: {}
+  user: {},
+  coinLabels: {
+    bcc: 'Bitcoin Cash',
+    btc: 'Bitcoin',
+    eth: 'Ethereum',
+    ltc: 'Litecoin',
+    neo: 'Neo',
+    other: 'Other',
+    xlm: 'Lumen',
+    xrp: 'Ripple'
+  },
+  jobCategories: [
+    { name: 'Hardware', val: 'hardware' },
+    { name: 'Software', val: 'software' },
+    { name: 'Writing', val: 'writing' },
+    { name: 'Legal', val: 'legal' },
+    { name: 'Labor', val: 'labor' },
+    { name: 'Automotive', val: 'automotive' },
+    { name: 'Services', val: 'services' },
+    { name: 'Others', val: 'others' }
+  ]
 }
 
 const actions = {
@@ -42,6 +62,12 @@ const getters = {
   },
   user(state) {
     return state.user
+  },
+  jobCategories(state) {
+    return state.jobCategories
+  },
+  coinLabels(state) {
+    return state.coinLabels
   }
 }
 

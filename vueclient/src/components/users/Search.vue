@@ -9,9 +9,9 @@
         <v-card v-show="errors.length < 1">
           <v-list three-line>
             <v-subheader>Results:</v-subheader>
-            <template v-for="(user, index) in users">
-              <v-divider :key="index"></v-divider>
-              <v-list-tile v-bind:key="index" @click="displayDetails(user.username)">
+            <template v-for="user in users">
+              <v-divider></v-divider>
+              <v-list-tile :key="user.username" @click="displayDetails(user.username)">
                 <v-list-tile-content>
                   <v-list-tile-title v-html="user.username"></v-list-tile-title>
                   <v-list-tile-sub-title>{{ user.jobCategory }} - {{ user.skills.join(' ') }}</v-list-tile-sub-title>
@@ -40,7 +40,7 @@ export default {
     }
   },
   data: () => ({
-    userss: [],
+    users: [],
     errors: [],
     loading: false
   }),

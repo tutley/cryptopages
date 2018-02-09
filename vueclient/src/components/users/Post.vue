@@ -40,6 +40,14 @@
             hint="Let others know the best email to reach you with. You have the option to hide this."
           ></v-text-field>
           <v-checkbox label="Display Email?" v-model="user.email.makePublic"></v-checkbox>
+          <v-text-field
+            label="location"
+            v-model="user.location.value"
+            :rules="locationRules"
+            validate-on-blur
+            hint="Let others know where you are located. You have the option to hide this."
+          ></v-text-field>
+          <v-checkbox label="Display Location?" v-model="user.location.makePublic"></v-checkbox>
            <v-select
               :items="jobCategories"
               v-model="user.jobCategory"
@@ -131,26 +139,6 @@ export default {
         },
         otherCoin: ''
       },
-      coinLabels: {
-        bcc: 'Bitcoin Cash',
-        btc: 'Bitcoin',
-        eth: 'Ethereum',
-        ltc: 'Litecoin',
-        neo: 'Neo',
-        other: 'Other',
-        xlm: 'Lumen',
-        xrp: 'Ripple'
-      },
-      jobCategories: [
-        { name: 'Hardware', val: 'hardware' },
-        { name: 'Software', val: 'software' },
-        { name: 'Writing', val: 'writing' },
-        { name: 'Legal', val: 'legal' },
-        { name: 'Labor', val: 'labor' },
-        { name: 'Automotive', val: 'automotive' },
-        { name: 'Services', val: 'services' },
-        { name: 'Others', val: 'others' }
-      ],
       usernameRules: [
         v => !!v || 'Username is required!',
         v => (v && v.length <= 60) || 'Username must be less than 60 characters',
@@ -165,9 +153,19 @@ export default {
           'E-mail must be valid'
       ],
       skillsRules: [],
+      locationRules: [],
       jobDescriptionRules: [],
+      otherCoinRules: [],
       errors: [],
       valid: true
+    }
+  },
+  computed: {
+    coinLabels() {
+      return this.$store.getters.coinLabels
+    },
+    jobCategories() {
+      return this.$store.getters.jobCategories
     }
   },
   methods: {

@@ -1331,7 +1331,7 @@ func UpdateUserBadRequest(t goatest.TInterface, ctx context.Context, service *go
 	u := &url.URL{
 		Path: fmt.Sprintf("/api/user/%v", username),
 	}
-	req, _err := http.NewRequest("PATCH", u.String(), nil)
+	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
@@ -1412,7 +1412,7 @@ func UpdateUserNoContent(t goatest.TInterface, ctx context.Context, service *goa
 	u := &url.URL{
 		Path: fmt.Sprintf("/api/user/%v", username),
 	}
-	req, _err := http.NewRequest("PATCH", u.String(), nil)
+	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}
@@ -1486,7 +1486,7 @@ func UpdateUserNotFound(t goatest.TInterface, ctx context.Context, service *goa.
 	u := &url.URL{
 		Path: fmt.Sprintf("/api/user/%v", username),
 	}
-	req, _err := http.NewRequest("PATCH", u.String(), nil)
+	req, _err := http.NewRequest("PUT", u.String(), nil)
 	if _err != nil {
 		panic("invalid test " + _err.Error()) // bug
 	}

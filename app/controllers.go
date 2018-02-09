@@ -456,8 +456,8 @@ func MountUserController(service *goa.Service, ctrl UserController) {
 	}
 	h = handleSecurity("jwt", h, "api:access")
 	h = handleUserOrigin(h)
-	service.Mux.Handle("PATCH", "/api/user/:username", ctrl.MuxHandler("update", h, unmarshalUpdateUserPayload))
-	service.LogInfo("mount", "ctrl", "User", "action", "Update", "route", "PATCH /api/user/:username", "security", "jwt")
+	service.Mux.Handle("PUT", "/api/user/:username", ctrl.MuxHandler("update", h, unmarshalUpdateUserPayload))
+	service.LogInfo("mount", "ctrl", "User", "action", "Update", "route", "PUT /api/user/:username", "security", "jwt")
 }
 
 // handleUserOrigin applies the CORS response headers corresponding to the origin.

@@ -758,7 +758,7 @@ paths:
       summary: show user
       tags:
       - user
-    patch:
+    put:
       description: |-
         Required security scopes:
           * `api:access`

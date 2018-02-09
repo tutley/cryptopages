@@ -71,7 +71,7 @@ var _ = Resource("user", func() {
 
 	Action("update", func() {
 		Routing(
-			PATCH("/:username"),
+			PUT("/:username"),
 		)
 		Params(func() {
 			Param("username", String)

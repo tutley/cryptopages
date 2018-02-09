@@ -7,7 +7,6 @@ import (
 	jwtgo "github.com/dgrijalva/jwt-go"
 	"github.com/goadesign/goa"
 	"github.com/goadesign/goa/middleware/security/jwt"
-	"github.com/imdario/mergo"
 	"github.com/tutley/cryptopages/app"
 	"golang.org/x/crypto/bcrypt"
 	"gopkg.in/mgo.v2/bson"
@@ -147,6 +146,7 @@ func (c *UserController) Show(ctx *app.ShowUserContext) error {
 	if err != nil {
 		return ctx.NotFound()
 	}
+	u.Password = nil
 	return ctx.OK(u)
 
 	// UserController_Show: end_implement
@@ -182,9 +182,8 @@ func (c *UserController) Update(ctx *app.UpdateUserContext) error {
 
 	// Make the changes
 	p := ctx.Payload
-
-	mergo.Merge(&u, p, mergo.WithOverride)
-	err = db.C("users").Update(bson.M{"username": u.Username}, u)
+	p.Password = u.Password
+	err = db.C("users").Update(bson.M{"username": u.Username}, p)
 	if err != nil {
 		return ctx.BadRequest(err)
 	}
