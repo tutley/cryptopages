@@ -17,14 +17,14 @@
                 <v-list-tile-title>{{user.name}}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile v-if="user.email">
-              <v-list-tile-content v-if="user.email.makePublic">
+            <v-list-tile v-if="showEmail">
+              <v-list-tile-content>
                 <v-list-tile-sub-title>Email</v-list-tile-sub-title>
                 <v-list-tile-title>{{user.email.value}}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile v-if="user.location">
-              <v-list-tile-content v-if="user.location.makePublic">
+            <v-list-tile v-if="showLocation">
+              <v-list-tile-content>
                 <v-list-tile-sub-title>Location</v-list-tile-sub-title>
                 <v-list-tile-title>{{user.location.value}}</v-list-tile-title>
               </v-list-tile-content>
@@ -35,18 +35,17 @@
                 <v-list-tile-title>{{ jobCategories.find(x => x.val === user.jobCategory).name }}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content v-if="user.jobDescription">
+            <v-list-tile v-if="user.jobDescription">
+              <v-list-tile-content>
                 <v-list-tile-sub-title>Job Description</v-list-tile-sub-title>
                 <v-list-tile-title>{{user.jobDescription}}</v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
-            <v-list-tile>
-              <v-list-tile-content v-if="user.skills.length > 0">
+            <v-list-tile v-if="user.skills.length > 0">
+              <v-list-tile-content>
                 <v-list-tile-sub-title>Skills</v-list-tile-sub-title>
                 <v-list-tile-title>
-                  {{user.name}}
-
+                  {{ user.skills.join(' ') }}
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -54,7 +53,11 @@
               <v-list-tile-content>
                 <v-list-tile-sub-title>Coins Accepted</v-list-tile-sub-title>
                 <v-list-tile-title>
-                  {{user.name}}
+                  <span
+                    v-for="(item, key) in user.coins" :key="key"
+                    v-if="item"
+                    >{{ key.toUpperCase() }} </span>
+
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -129,7 +132,7 @@
               <v-btn small color="error" @click="doDelete">DELETE</v-btn>
             </v-card-actions>
             <v-card-actions v-show="editable">
-              <v-btn small color="success" @click="saveUpdate">SAVE</v-btn>
+              <v-btn small color="secondary" @click="saveUpdate">SAVE</v-btn>
               <v-spacer></v-spacer>
               <v-btn small color="warning" @click="cancelEdit">CANCEL</v-btn>
             </v-card-actions>
@@ -193,6 +196,28 @@ export default {
     },
     jobCategories() {
       return this.$store.getters.jobCategories
+    },
+    showEmail() {
+      if (this.user.email) {
+        if (this.user.email.makePublic) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
+    },
+    showLocation() {
+      if (this.user.location) {
+        if (this.user.location.makePublic) {
+          return true
+        } else {
+          return false
+        }
+      } else {
+        return false
+      }
     }
   },
   methods: {

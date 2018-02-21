@@ -1,4 +1,3 @@
-import '../node_modules/vuetify/src/stylus/app.styl'
 import Vue from 'vue'
 import {
   Vuetify,
@@ -7,12 +6,14 @@ import {
   VList,
   VBtn,
   VIcon,
+  VChip,
   VCard,
   VCheckbox,
   VToolbar,
   VFooter,
   VDivider,
   VForm,
+  VJumbotron,
   VProgressCircular,
   VProgressLinear,
   VSelect,
@@ -35,10 +36,12 @@ Vue.use(Vuetify, {
     VNavigationDrawer,
     VList,
     VBtn,
+    VChip,
     VIcon,
     VCard,
     VCheckbox,
     VToolbar,
+    VJumbotron,
     VFooter,
     VDivider,
     VForm,
@@ -56,12 +59,12 @@ Vue.use(Vuetify, {
     Touch
   },
   theme: {
-    primary: '#ffdb3b',
-    secondary: '#ffab0b',
-    accent: '#757575',
+    primary: '#8BC34A',
+    secondary: '#689F38',
+    accent: '#FFEB3B',
     error: '#FF5252',
     info: '#73ea7b',
-    success: '#4CAF50',
+    success: '#DCEDC8',
     warning: '#FFC107'
   }
 })

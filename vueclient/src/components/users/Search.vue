@@ -2,6 +2,11 @@
   <v-container fluid>
     <v-layout row>
       <v-flex xs12 sm6 offset-sm3>
+        
+      </v-flex>
+    </v-layout>
+    <v-layout row>
+      <v-flex xs12 sm6 offset-sm3>
         <v-progress-linear :indeterminate="true" v-show="loading"></v-progress-linear>
         <v-alert v-show="users.length < 1 && !loading" color="info" icon="info" value="true">
         Sorry, no matching users.
