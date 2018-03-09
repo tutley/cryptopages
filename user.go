@@ -117,7 +117,7 @@ func (c *UserController) Search(ctx *app.SearchUserContext) error {
 	// do the thing
 
 	users := []*app.CryptopagesUser{}
-	err := db.C("users").Find(bson.M{}).All(&users)
+	err := db.C("users").Find(bson.M{"available": true}).All(&users)
 	if err != nil {
 		return ctx.NotFound()
 	}
